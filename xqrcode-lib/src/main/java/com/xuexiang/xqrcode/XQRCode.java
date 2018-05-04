@@ -3,6 +3,7 @@ package com.xuexiang.xqrcode;
 import android.graphics.Bitmap;
 import android.hardware.Camera;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.google.zxing.Result;
 import com.xuexiang.xqrcode.camera.CameraManager;
@@ -82,6 +83,7 @@ public class XQRCode {
      * @param analyzeCallback
      */
     public static void analyzeQRCode(String QRCodePicPath, QRCodeAnalyzeUtils.AnalyzeCallback analyzeCallback) {
+        Log.e("xuexiang", "QRCodePicPath:" + QRCodePicPath);
         QRCodeAnalyzeUtils.analyze(QRCodePicPath, analyzeCallback);
     }
 
@@ -116,8 +118,6 @@ public class XQRCode {
     public static Bitmap createQRCodeWithLogo(String contents, int width, int height, Bitmap logo) {
         return QRCodeProduceUtils.create(contents, width, height, logo);
     }
-
-
 
     //================================FlashLight===================================//
     /**

@@ -32,13 +32,16 @@ import android.view.View;
 import com.google.zxing.ResultPoint;
 import com.xuexiang.xqrcode.R;
 import com.xuexiang.xqrcode.camera.CameraManager;
-import com.xuexiang.xqrcode.util.DisplayUtil;
 
 import java.util.Collection;
 import java.util.HashSet;
 
 /**
- * 自定义组件实现,扫描功能
+ * <pre>
+ *     desc   : 自定义组件实现,扫描功能
+ *     author : xuexiang
+ *     time   : 2018/5/5 上午12:48
+ * </pre>
  */
 public final class ViewfinderView extends View {
 
@@ -93,10 +96,10 @@ public final class ViewfinderView extends View {
         }
 
         // 扫描框的宽度
-        CameraManager.FRAME_WIDTH = (int) ta.getDimension(R.styleable.ViewfinderView_inner_width, DisplayUtil.screenWidthPx / 2);
+        CameraManager.FRAME_WIDTH = (int) ta.getDimension(R.styleable.ViewfinderView_inner_width, getDefaultScanSize(getContext()));
 
         // 扫描框的高度
-        CameraManager.FRAME_HEIGHT = (int) ta.getDimension(R.styleable.ViewfinderView_inner_height, DisplayUtil.screenWidthPx / 2);
+        CameraManager.FRAME_HEIGHT = (int) ta.getDimension(R.styleable.ViewfinderView_inner_height, getDefaultScanSize(getContext()));
 
         // 扫描框边角颜色
         innercornercolor = ta.getColor(R.styleable.ViewfinderView_inner_corner_color, Color.parseColor("#45DDDD"));
@@ -268,5 +271,27 @@ public final class ViewfinderView extends View {
         possibleResultPoints.add(point);
     }
 
+
+    /**
+     * 获取默认扫描的尺寸
+     * @return
+     */
+    public int getDefaultScanSize(Context context) {
+        return Math.min(getScreenWidth(context), getScreenHeight(context)) * 3 / 4;
+    }
+
+    /**
+     * 得到设备屏幕的宽度
+     */
+    private static int getScreenWidth(Context context) {
+        return context.getResources().getDisplayMetrics().widthPixels;
+    }
+
+    /**
+     * 得到设备屏幕的高度
+     */
+    private static int getScreenHeight(Context context) {
+        return context.getResources().getDisplayMetrics().heightPixels;
+    }
 
 }

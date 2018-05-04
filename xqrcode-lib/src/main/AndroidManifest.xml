@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.xuexiang.xqrcode" >
+    package="com.xuexiang.xqrcode">
 
     <uses-feature android:name="android.hardware.camera" />
     <uses-feature android:name="android.hardware.camera.autofocus" />
@@ -9,4 +9,12 @@
 
     <uses-permission android:name="android.permission.VIBRATE" />
 
+    <application>
+        <activity
+            android:name="com.xuexiang.xqrcode.ui.CaptureActivity"
+            android:configChanges="screenSize|keyboardHidden|orientation|keyboard"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.NoActionBar"
+            android:windowSoftInputMode="stateAlwaysHidden" />
+    </application>
 </manifest>
