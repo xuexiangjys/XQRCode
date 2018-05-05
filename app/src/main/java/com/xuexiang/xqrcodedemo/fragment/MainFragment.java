@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Toast;
@@ -17,7 +16,7 @@ import com.xuexiang.xqrcode.XQRCode;
 import com.xuexiang.xqrcode.ui.CaptureActivity;
 import com.xuexiang.xqrcode.util.QRCodeAnalyzeUtils;
 import com.xuexiang.xqrcodedemo.util.PathUtils;
-import com.xuexiang.xutil.app.ActivityUtils;
+import com.xuexiang.xutil.app.IntentUtils;
 import com.xuexiang.xutil.common.ClickUtils;
 import com.xuexiang.xutil.tip.ToastUtils;
 
@@ -73,13 +72,10 @@ public class MainFragment extends SimpleListFragment {
 
                 break;
             case 2:
-
+                openPage(QRCodeProduceFragment.class);
                 break;
             case 3:
-                Intent intent = new Intent();
-                intent.setAction(Intent.ACTION_PICK);
-                intent.setType("image/*");
-                startActivityForResult(intent, REQUEST_IMAGE);
+                startActivityForResult(IntentUtils.getDocumentPickerIntent(IntentUtils.DocumentType.IMAGE), REQUEST_IMAGE);
                 break;
             default:
                 break;
@@ -98,7 +94,6 @@ public class MainFragment extends SimpleListFragment {
     @Override
     public void onFragmentResult(int requestCode, int resultCode, Intent data) {
         super.onFragmentResult(requestCode, resultCode, data);
-        Log.e("xuexiang", "onFragmentResult");
     }
 
     @Override

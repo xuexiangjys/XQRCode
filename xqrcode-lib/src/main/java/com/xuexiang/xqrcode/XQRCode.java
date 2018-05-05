@@ -13,7 +13,7 @@ import com.xuexiang.xqrcode.util.QRCodeProduceUtils;
 
 /**
  * <pre>
- *     desc   : XQRCode API
+ *     desc   : 二维码 XQRCode API
  *     author : xuexiang
  *     time   : 2018/5/4 上午12:33
  * </pre>

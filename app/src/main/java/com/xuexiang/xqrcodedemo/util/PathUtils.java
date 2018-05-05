@@ -16,7 +16,6 @@
 
 package com.xuexiang.xqrcodedemo.util;
 
-import android.annotation.TargetApi;
 import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.Context;
@@ -26,9 +25,10 @@ import android.os.Build;
 import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
-import android.support.annotation.RequiresApi;
 
 import com.xuexiang.xutil.XUtil;
+
+import java.io.File;
 
 /**
  * <pre>
@@ -41,6 +41,43 @@ public class PathUtils {
 
     private PathUtils() {
         throw new UnsupportedOperationException("u can't instantiate me...");
+    }
+
+
+    /**
+     * 获取图片目录
+     * <pre>path: /storage/emulated/0/Pictures</pre>
+     *
+     * @return 图片目录
+     */
+    public static String getExtPicturesPath() {
+        return Environment
+                .getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
+                .getAbsolutePath();
+    }
+
+    /**
+     * 获取相机拍摄的照片和视频的目录
+     * <pre>path: /storage/emulated/0/DCIM</pre>
+     *
+     * @return 照片和视频目录
+     */
+    public static String getExtDcimPath() {
+        return Environment
+                .getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM)
+                .getAbsolutePath();
+    }
+
+    /**
+     * 获取此应用在外置储存中的相机目录
+     * <pre>path: /storage/emulated/0/DCIM/Camera</pre>
+     *
+     * @return 此应用在外置储存中的相机目录
+     */
+    public static String getExtCameraPath() {
+        return Environment
+                .getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM)
+                .getAbsolutePath() + File.separator + "Camera";
     }
 
     /**

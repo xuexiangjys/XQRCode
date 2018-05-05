@@ -52,7 +52,6 @@ public class CaptureActivity extends AppCompatActivity {
             bundle.putInt(XQRCode.RESULT_TYPE, XQRCode.RESULT_SUCCESS);
             bundle.putString(XQRCode.RESULT_DATA, result);
             resultIntent.putExtras(bundle);
-            Log.e("xuexiang", "RESULT_DATA:" + result);
             CaptureActivity.this.setResult(RESULT_OK, resultIntent);
             CaptureActivity.this.finish();
         }
