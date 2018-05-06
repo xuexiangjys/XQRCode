@@ -56,7 +56,7 @@ import static com.xuexiang.xaop.consts.PermissionConsts.STORAGE;
 
 /**
  * <pre>
- *     desc   :
+ *     desc   : 二维码生成界面
  *     author : xuexiang
  *     time   : 2018/5/5 下午11:06
  * </pre>

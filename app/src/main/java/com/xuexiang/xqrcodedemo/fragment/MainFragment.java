@@ -24,9 +24,12 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Toast;
 
+import com.xuexiang.xaop.annotation.IOThread;
 import com.xuexiang.xaop.annotation.Permission;
+import com.xuexiang.xaop.enums.ThreadType;
 import com.xuexiang.xpage.annotation.Page;
 import com.xuexiang.xpage.base.SimpleListFragment;
+import com.xuexiang.xpage.enums.CoreAnim;
 import com.xuexiang.xpage.utils.TitleBar;
 import com.xuexiang.xqrcode.XQRCode;
 import com.xuexiang.xqrcode.ui.CaptureActivity;
@@ -38,11 +41,12 @@ import com.xuexiang.xutil.tip.ToastUtils;
 
 import java.util.List;
 
+import static android.app.Activity.RESULT_OK;
 import static com.xuexiang.xaop.consts.PermissionConsts.CAMERA;
 
 /**
  * <pre>
- *     desc   :
+ *     desc   : 二维码扫描
  *     author : xuexiang
  *     time   : 2018/5/4 下午11:35
  * </pre>
@@ -57,7 +61,10 @@ public class MainFragment extends SimpleListFragment {
      * 选择系统图片Request Code
      */
     public static final int REQUEST_IMAGE = 112;
-
+    /**
+     * 定制化扫描界面Request Code
+     */
+    public static final int REQUEST_CUSTOM_SCAN = 113;
     /**
      * 初始化例子
      *
@@ -82,10 +89,10 @@ public class MainFragment extends SimpleListFragment {
     protected void onItemClick(int position) {
         switch(position) {
             case 0:
-                startScan();
+                startScan(false);
                 break;
             case 1:
-
+                startScan(true);
                 break;
             case 2:
                 openPage(QRCodeProduceFragment.class);
@@ -99,36 +106,34 @@ public class MainFragment extends SimpleListFragment {
     }
 
     /**
-     * 开启二维码扫描，跳转到CaptureActivity
+     * 开启二维码扫描
      */
     @Permission(CAMERA)
-    private void startScan() {
-        Intent intent = new Intent(getActivity(), CaptureActivity.class);
-        startActivityForResult(intent, REQUEST_CODE);
+    @IOThread(ThreadType.Single)
+    private void startScan(boolean isCustom) {
+        if (isCustom) {
+            openPageForResult(CustomCaptureFragment.class, null, REQUEST_CUSTOM_SCAN);
+        } else {
+            Intent intent = new Intent(getActivity(), CaptureActivity.class);
+            startActivityForResult(intent, REQUEST_CODE);
+        }
     }
 
     @Override
     public void onFragmentResult(int requestCode, int resultCode, Intent data) {
         super.onFragmentResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CUSTOM_SCAN && resultCode == RESULT_OK) {
+            handleScanResult(data);
+        }
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         //处理二维码扫描结果
-        if (requestCode == REQUEST_CODE) {
+        if (requestCode == REQUEST_CODE && resultCode == RESULT_OK) {
             //处理扫描结果（在界面上显示）
-            if (data != null) {
-                Bundle bundle = data.getExtras();
-                if (bundle != null) {
-                    if (bundle.getInt(XQRCode.RESULT_TYPE) == XQRCode.RESULT_SUCCESS) {
-                        String result = bundle.getString(XQRCode.RESULT_DATA);
-                        ToastUtils.toast("解析结果:" + result, Toast.LENGTH_LONG);
-                    } else if (bundle.getInt(XQRCode.RESULT_TYPE) == XQRCode.RESULT_FAILED) {
-                        ToastUtils.toast("解析二维码失败", Toast.LENGTH_LONG);
-                    }
-                }
-            }
+            handleScanResult(data);
         }
 
         //选择系统图片并解析
@@ -147,6 +152,24 @@ public class MainFragment extends SimpleListFragment {
                         ToastUtils.toast("解析二维码失败", Toast.LENGTH_LONG);
                     }
                 });
+            }
+        }
+    }
+
+    /**
+     * 处理二维码扫描结果
+     * @param data
+     */
+    private void handleScanResult(Intent data) {
+        if (data != null) {
+            Bundle bundle = data.getExtras();
+            if (bundle != null) {
+                if (bundle.getInt(XQRCode.RESULT_TYPE) == XQRCode.RESULT_SUCCESS) {
+                    String result = bundle.getString(XQRCode.RESULT_DATA);
+                    ToastUtils.toast("解析结果:" + result, Toast.LENGTH_LONG);
+                } else if (bundle.getInt(XQRCode.RESULT_TYPE) == XQRCode.RESULT_FAILED) {
+                    ToastUtils.toast("解析二维码失败", Toast.LENGTH_LONG);
+                }
             }
         }
     }

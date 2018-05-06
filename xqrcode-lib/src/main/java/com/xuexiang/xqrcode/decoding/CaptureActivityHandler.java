@@ -23,11 +23,11 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.Result;
 import com.xuexiang.xqrcode.R;
+import com.xuexiang.xqrcode.logs.QCLog;
 import com.xuexiang.xqrcode.ui.CaptureFragment;
 import com.xuexiang.xqrcode.camera.CameraManager;
 import com.xuexiang.xqrcode.view.ViewfinderResultPointCallback;
@@ -67,17 +67,17 @@ public final class CaptureActivityHandler extends Handler {
     @Override
     public void handleMessage(Message message) {
         if (message.what == R.id.auto_focus) {
-            //Log.d(TAG, "Got auto-focus message");
+            //QCLog.dTag(TAG, "Got auto-focus message");
             // When one auto focus pass finishes, start another. This is the closest thing to
             // continuous AF. It does seem to hunt a bit, but I'm not sure what else to do.
             if (state == State.PREVIEW) {
                 CameraManager.get().requestAutoFocus(this, R.id.auto_focus);
             }
         } else if (message.what == R.id.restart_preview) {
-            Log.d(TAG, "Got restart preview message");
+            QCLog.dTag(TAG, "Got restart preview message");
             restartPreviewAndDecode();
         } else if (message.what == R.id.decode_succeeded) {
-            Log.d(TAG, "Got decode succeeded message");
+            QCLog.dTag(TAG, "Got decode succeeded message");
             state = State.SUCCESS;
             Bundle bundle = message.getData();
 
@@ -92,11 +92,11 @@ public final class CaptureActivityHandler extends Handler {
             state = State.PREVIEW;
             CameraManager.get().requestPreviewFrame(decodeThread.getHandler(), R.id.decode);
         } else if (message.what == R.id.return_scan_result) {
-            Log.d(TAG, "Got return scan result message");
+            QCLog.dTag(TAG, "Got return scan result message");
             fragment.getActivity().setResult(Activity.RESULT_OK, (Intent) message.obj);
             fragment.getActivity().finish();
         } else if (message.what == R.id.launch_product_query) {
-            Log.d(TAG, "Got product query message");
+            QCLog.dTag(TAG, "Got product query message");
             String url = (String) message.obj;
             Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);

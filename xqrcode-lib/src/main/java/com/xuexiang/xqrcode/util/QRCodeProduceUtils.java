@@ -22,8 +22,6 @@ import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.text.TextUtils;
-import android.util.Log;
-
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.EncodeHintType;
 import com.google.zxing.WriterException;
@@ -33,6 +31,7 @@ import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 import com.google.zxing.qrcode.encoder.ByteMatrix;
 import com.google.zxing.qrcode.encoder.Encoder;
 import com.google.zxing.qrcode.encoder.QRCode;
+import com.xuexiang.xqrcode.logs.QCLog;
 
 import java.util.HashMap;
 import java.util.Hashtable;
@@ -457,7 +456,7 @@ public final class QRCodeProduceUtils {
                         break;
                 }
             }
-            Log.d("QR_MAPPING", s);
+            QCLog.dTag("QR_MAPPING", s);
         }
 
         return renderedBitmap;

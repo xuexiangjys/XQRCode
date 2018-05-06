@@ -20,8 +20,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
-import android.util.Log;
-
 import com.google.zxing.BinaryBitmap;
 import com.google.zxing.DecodeHintType;
 import com.google.zxing.MultiFormatReader;
@@ -29,6 +27,7 @@ import com.google.zxing.ReaderException;
 import com.google.zxing.Result;
 import com.google.zxing.common.HybridBinarizer;
 import com.xuexiang.xqrcode.R;
+import com.xuexiang.xqrcode.logs.QCLog;
 import com.xuexiang.xqrcode.ui.CaptureFragment;
 import com.xuexiang.xqrcode.camera.CameraManager;
 import com.xuexiang.xqrcode.camera.PlanarYUVLuminanceSource;
@@ -91,7 +90,7 @@ final class DecodeHandler extends Handler {
 
         if (rawResult != null) {
             long end = System.currentTimeMillis();
-            Log.d(TAG, "Found barcode (" + (end - start) + " ms):\n" + rawResult.toString());
+            QCLog.dTag(TAG, "Found barcode (" + (end - start) + " ms):\n" + rawResult.toString());
             Message message = Message.obtain(fragment.getHandler(), R.id.decode_succeeded, rawResult);
             Bundle bundle = new Bundle();
             bundle.putParcelable(DecodeThread.BARCODE_BITMAP, source.renderCroppedGreyscaleBitmap());

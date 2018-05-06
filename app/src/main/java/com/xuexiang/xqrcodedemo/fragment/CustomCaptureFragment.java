@@ -14,43 +14,56 @@
  * limitations under the License.
  */
 
-package com.xuexiang.xqrcode.ui;
+package com.xuexiang.xqrcodedemo.fragment;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 
-import com.xuexiang.xqrcode.R;
+import com.xuexiang.xaop.annotation.SingleClick;
+import com.xuexiang.xpage.annotation.Page;
+import com.xuexiang.xpage.base.BaseFragment;
+import com.xuexiang.xpage.enums.CoreAnim;
 import com.xuexiang.xqrcode.XQRCode;
-import com.xuexiang.xqrcode.logs.QCLog;
+import com.xuexiang.xqrcode.ui.CaptureFragment;
 import com.xuexiang.xqrcode.util.QRCodeAnalyzeUtils;
+import com.xuexiang.xqrcodedemo.R;
+import com.xuexiang.xutil.tip.ToastUtils;
 
+import butterknife.OnClick;
+
+import static android.app.Activity.RESULT_OK;
 
 /**
  * <pre>
- *     desc   : 默认的二维码扫描Activity
+ *     desc   : 自定义二维码扫描界面
  *     author : xuexiang
- *     time   : 2018/5/3 上午1:42
+ *     time   : 2018/5/6 下午11:48
  * </pre>
  */
-public class CaptureActivity extends AppCompatActivity {
-
+@Page(name = "二维码扫描", anim = CoreAnim.none)
+public class CustomCaptureFragment extends BaseFragment {
+    public static boolean isOpen = false;
+    /**
+     * 布局的资源id
+     *
+     * @return
+     */
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected int getLayoutId() {
+        return R.layout.fragment_custom_capture;
+    }
 
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.xqrcode_activity_capture);
-        CaptureFragment captureFragment = new CaptureFragment();
+    /**
+     * 初始化控件
+     */
+    @Override
+    protected void initViews() {
+        // 为二维码扫描界面设置定制化界面
+        CaptureFragment captureFragment = XQRCode.getCaptureFragment(R.layout.layout_custom_camera);
         captureFragment.setAnalyzeCallback(analyzeCallback);
-        getSupportFragmentManager().beginTransaction().replace(R.id.fl_zxing_container, captureFragment).commit();
-        captureFragment.setCameraInitCallBack(new CaptureFragment.CameraInitCallBack() {
-            @Override
-            public void callBack(Exception e) {
-                QCLog.e("CaptureActivity", e);
-            }
-        });
-
+        getChildFragmentManager().beginTransaction().replace(R.id.fl_my_container, captureFragment).commit();
     }
 
     /**
@@ -64,8 +77,8 @@ public class CaptureActivity extends AppCompatActivity {
             bundle.putInt(XQRCode.RESULT_TYPE, XQRCode.RESULT_SUCCESS);
             bundle.putString(XQRCode.RESULT_DATA, result);
             resultIntent.putExtras(bundle);
-            CaptureActivity.this.setResult(RESULT_OK, resultIntent);
-            CaptureActivity.this.finish();
+            setFragmentResult(RESULT_OK, resultIntent);
+            popToBack();
         }
 
         @Override
@@ -75,8 +88,28 @@ public class CaptureActivity extends AppCompatActivity {
             bundle.putInt(XQRCode.RESULT_TYPE, XQRCode.RESULT_FAILED);
             bundle.putString(XQRCode.RESULT_DATA, "");
             resultIntent.putExtras(bundle);
-            CaptureActivity.this.setResult(RESULT_OK, resultIntent);
-            CaptureActivity.this.finish();
+            setFragmentResult(RESULT_OK, resultIntent);
+            popToBack();
         }
     };
+
+    /**
+     * 初始化监听
+     */
+    @Override
+    protected void initListeners() {
+
+    }
+
+    @OnClick(R.id.ll_flash_light)
+    @SingleClick
+    void onClickFlashLight(View v) {
+        isOpen = !isOpen;
+        try {
+            XQRCode.enableFlashLight(isOpen);
+        } catch (RuntimeException e) {
+            e.printStackTrace();
+            ToastUtils.toast("设备不支持闪光灯!");
+        }
+    }
 }

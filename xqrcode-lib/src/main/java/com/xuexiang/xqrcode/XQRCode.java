@@ -22,6 +22,7 @@ import android.os.Bundle;
 
 import com.google.zxing.Result;
 import com.xuexiang.xqrcode.camera.CameraManager;
+import com.xuexiang.xqrcode.logs.QCLog;
 import com.xuexiang.xqrcode.ui.CaptureFragment;
 import com.xuexiang.xqrcode.util.QRCodeAnalyzeUtils;
 import com.xuexiang.xqrcode.util.QRCodeProduceUtils;
@@ -60,6 +61,23 @@ public class XQRCode {
      */
     public static final String KEY_LAYOUT_ID = "key_layout_id";
 
+    /**
+     * 设置是否打开调试
+     *
+     * @param isDebug
+     */
+    public static void debug(boolean isDebug) {
+        QCLog.debug(isDebug);
+    }
+
+    /**
+     * 设置调试模式
+     *
+     * @param tag
+     */
+    public static void debug(String tag) {
+        QCLog.debug(tag);
+    }
 
     //==================================CaptureFragment=================================//
 
@@ -160,7 +178,7 @@ public class XQRCode {
      *
      * @param isEnable 是否开启闪光灯
      */
-    public static void enableFlashLight(boolean isEnable) {
+    public static void enableFlashLight(boolean isEnable) throws RuntimeException {
         if (isEnable) {
             Camera camera = CameraManager.get().getCamera();
             if (camera != null) {

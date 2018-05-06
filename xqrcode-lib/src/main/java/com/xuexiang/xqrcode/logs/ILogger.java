@@ -14,22 +14,25 @@
  * limitations under the License.
  */
 
-package com.xuexiang.xqrcodedemo.activity;
+package com.xuexiang.xqrcode.logs;
 
-import android.graphics.PixelFormat;
-import android.os.Bundle;
+/**
+ * <pre>
+ *     desc   : 简易的日志记录接口
+ *     author : xuexiang
+ *     time   : 2018/4/30 下午12:18
+ * </pre>
+ */
+public interface ILogger {
 
-import com.xuexiang.xpage.base.BaseActivity;
-import com.xuexiang.xqrcodedemo.fragment.MainFragment;
-
-public class MainActivity extends BaseActivity {
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        //为了解决fragment里面放surfaceview，第一次黑屏的问题
-        getWindow().setFormat(PixelFormat.TRANSLUCENT);
-        openPage(MainFragment.class);
-    }
+    /**
+     * 打印信息
+     *
+     * @param priority 优先级
+     * @param tag      标签
+     * @param message  信息
+     * @param t        出错信息
+     */
+    void log(int priority, String tag, String message, Throwable t);
 
 }

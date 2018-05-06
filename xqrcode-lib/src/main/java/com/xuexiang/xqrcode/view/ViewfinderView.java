@@ -75,7 +75,7 @@ public final class ViewfinderView extends View {
         possibleResultPoints = new HashSet<>(5);
 
         scanLight = BitmapFactory.decodeResource(resources,
-                R.drawable.scan_light);
+                R.drawable.xqrcode_ic_scan_light);
 
         initInnerRect(context, attrs);
     }
@@ -114,7 +114,7 @@ public final class ViewfinderView extends View {
         }
 
         // 扫描控件
-        scanLight = BitmapFactory.decodeResource(getResources(), ta.getResourceId(R.styleable.ViewfinderView_inner_scan_bitmap, R.drawable.scan_light));
+        scanLight = BitmapFactory.decodeResource(getResources(), ta.getResourceId(R.styleable.ViewfinderView_inner_scan_bitmap, R.drawable.xqrcode_ic_scan_light));
         // 扫描速度
         SCAN_VELOCITY = ta.getInt(R.styleable.ViewfinderView_inner_scan_speed, 5);
 
