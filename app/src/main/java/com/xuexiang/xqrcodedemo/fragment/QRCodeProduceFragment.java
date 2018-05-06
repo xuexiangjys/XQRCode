@@ -197,7 +197,7 @@ public class QRCodeProduceFragment extends BaseFragment {
                     return;
                 }
 
-                createQRCodeWithBackgroudImage();
+                createQRCodeWithBackgroundImage();
 
                 break;
             default:
@@ -250,7 +250,7 @@ public class QRCodeProduceFragment extends BaseFragment {
      * 生成复杂的带背景图案的二维码
      */
     @IOThread(ThreadType.Single)
-    private void createQRCodeWithBackgroudImage() {
+    private void createQRCodeWithBackgroundImage() {
         QRCodeProduceUtils.Builder builder = XQRCode.newQRCodeBuilder(mEtInput.getText().toString())
                 .setAutoColor(mCbAutoColor.isChecked())
                 .setWhiteMargin(mCbWhiteMargin.isChecked())

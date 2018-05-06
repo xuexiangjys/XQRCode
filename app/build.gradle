@@ -29,7 +29,9 @@ android {
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'com.android.support:appcompat-v7:27.1.1'
-    implementation project(':xqrcode-lib')
+//    implementation project(':xqrcode-lib')
+
+    implementation 'com.github.xuexiangjys:XQRCode:1.0.0'
 
     implementation 'com.github.xuexiangjys.XUtil:xutil-core:1.1.2'
     implementation 'com.github.xuexiangjys.XAOP:xaop-runtime:1.0.0'  //添加依赖
