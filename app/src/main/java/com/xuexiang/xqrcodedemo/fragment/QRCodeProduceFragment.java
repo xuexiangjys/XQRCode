@@ -171,7 +171,7 @@ public class QRCodeProduceFragment extends BaseFragment {
                     return;
                 }
 
-                createQRCodeWithLogo(ImageUtils.getBitmap(R.mipmap.ic_launcher));
+                createQRCodeWithLogo(null);
 
                 break;
             case R.id.btn_create_with_logo:
@@ -180,7 +180,7 @@ public class QRCodeProduceFragment extends BaseFragment {
                     return;
                 }
 
-                createQRCodeWithLogo(null);
+                createQRCodeWithLogo(ImageUtils.getBitmap(R.mipmap.ic_launcher));
 
                 break;
 

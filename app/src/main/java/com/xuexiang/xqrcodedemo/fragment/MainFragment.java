@@ -73,7 +73,7 @@ public class MainFragment extends SimpleListFragment {
      */
     @Override
     protected List<String> initSimpleData(List<String> lists) {
-        lists.add("简单模式 加载默认二维码扫描界面");
+        lists.add("默认扫描界面");
         lists.add("定制化扫描界面");
         lists.add("生成二维码图片");
         lists.add("选择二维码进行解析");
