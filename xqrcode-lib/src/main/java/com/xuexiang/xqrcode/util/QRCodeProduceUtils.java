@@ -1,3 +1,19 @@
+/*
+ * Copyright (C) 2018 xuexiangjys(xuexiangjys@163.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.xuexiang.xqrcode.util;
 
 import android.graphics.Bitmap;
@@ -49,9 +65,21 @@ public final class QRCodeProduceUtils {
     private static final int BYTE_PTC = 0x5;
 
     /**
-     * This default value makes data blocks appear smaller.
+     * 二维码最大尺寸
      */
-    private static float DEFAULT_DTA_DOT_SCALE = 0.3f;
+    public static final int QRCODE_BITMAP_MAX_SIZE = 400;
+    /**
+     * 默认边缘宽度
+     */
+    private static int DEFAULT_MARGIN = 20;
+    /**
+     * 默认数据点缩放比例
+     */
+    private static float DEFAULT_DATA_DOT_SCALE = 0.3F;
+
+    /**
+     * 默认二值化中值
+     */
     private static int DEFAULT_BINARIZING_THRESHOLD = 128;
 
     /**
@@ -61,16 +89,221 @@ public final class QRCodeProduceUtils {
         throw new UnsupportedOperationException("Do not need instantiate!");
     }
 
+    /**
+     * 获取二维码生成构建者
+     * @param contents
+     * @return
+     */
+    public static Builder newBuilder(String contents) {
+        return new Builder(contents);
+    }
+
+    /**
+     * 二维码生成构建者
+     */
+    public static class Builder {
+        /**
+         * 内容
+         */
+        String contents;
+        /**
+         * 尺寸
+         */
+        int size;
+        /**
+         * 边缘宽度
+         */
+        int margin;
+        /**
+         * 数据点的缩放比例
+         */
+        float dataDotScale;
+        /**
+         * 是否自动选取色值
+         */
+        boolean autoColor;
+        /**
+         * 深色色值
+         */
+        int colorDark;
+        /**
+         * 浅色色值
+         */
+        int colorLight;
+        /**
+         * 背景图案
+         */
+        Bitmap backgroundImage;
+        /**
+         * 是否有白色边缘
+         */
+        boolean whiteMargin;
+
+        /**
+         * 是否（二值化）灰度化背景图案
+         */
+        boolean binarize;
+        /**
+         * 二值化中值
+         */
+        int binarizeThreshold;
+
+        public Builder(String contents) {
+            this.contents = contents;
+            this.size = QRCODE_BITMAP_MAX_SIZE;
+            this.margin = DEFAULT_MARGIN;
+            this.dataDotScale = DEFAULT_DATA_DOT_SCALE;
+            this.autoColor = true;
+            this.colorDark = Color.BLACK;
+            this.colorLight = Color.WHITE;
+            this.whiteMargin = false;
+            this.binarize = false;
+            this.binarizeThreshold = DEFAULT_BINARIZING_THRESHOLD;
+        }
+
+        /**
+         * 设置二维码携带的内容
+         *
+         * @param contents 二维码携带的内容
+         * @return
+         */
+        public Builder setContents(String contents) {
+            this.contents = contents;
+            return this;
+        }
+
+        /**
+         * 设置二维码的尺寸
+         *
+         * @param size 二维码的尺寸
+         * @return
+         */
+        public Builder setSize(int size) {
+            this.size = size;
+            return this;
+        }
+
+        /**
+         * 设置二维码的边缘宽度
+         *
+         * @param margin 边缘宽度
+         * @return
+         */
+        public Builder setMargin(int margin) {
+            this.margin = margin;
+            return this;
+        }
+
+        /**
+         * 设置二维码的数据点缩放比例
+         *
+         * @param dataDotScale 数据点缩放比例
+         * @return
+         */
+        public Builder setDataDotScale(float dataDotScale) {
+            this.dataDotScale = dataDotScale;
+            return this;
+        }
+
+        /**
+         * 设置深色点（true-dots）色值
+         *
+         * @param colorDark
+         * @return
+         */
+        public Builder setColorDark(int colorDark) {
+            this.colorDark = colorDark;
+            return this;
+        }
+
+        /**
+         * 设置浅色点（false-dots）色值
+         *
+         * @param colorLight
+         * @return
+         */
+        public Builder setColorLight(int colorLight) {
+            this.colorLight = colorLight;
+            return this;
+        }
+
+        /**
+         * 设置背景图案
+         *
+         * @param backgroundImage
+         * @return
+         */
+        public Builder setBackgroundImage(Bitmap backgroundImage) {
+            this.backgroundImage = backgroundImage;
+            return this;
+        }
+
+        /**
+         * 设置是否是白色的边缘
+         *
+         * @param whiteMargin
+         * @return
+         */
+        public Builder setWhiteMargin(boolean whiteMargin) {
+            this.whiteMargin = whiteMargin;
+            return this;
+        }
+
+        /**
+         * 设置是否自动从背景图案中选取色值
+         *
+         * @param autoColor
+         * @return
+         */
+        public Builder setAutoColor(boolean autoColor) {
+            this.autoColor = autoColor;
+            return this;
+        }
+
+        /**
+         * 设置是否（二值化）灰度化背景图案
+         *
+         * @param binarize
+         * @return
+         */
+        public Builder setBinarize(boolean binarize) {
+            this.binarize = binarize;
+            return this;
+        }
+
+        /**
+         * 设置二值化中值
+         *
+         * @param binarizeThreshold
+         * @return
+         */
+        public Builder setBinarizeThreshold(int binarizeThreshold) {
+            this.binarizeThreshold = binarizeThreshold;
+            return this;
+        }
+
+        /**
+         * 生成二维码
+         * @return
+         */
+        public Bitmap build() {
+            return QRCodeProduceUtils.create(contents, size, margin, dataDotScale,
+                    colorDark, colorLight, backgroundImage, whiteMargin, autoColor,
+                    binarize, binarizeThreshold);
+        }
+    }
+
+
     public static Bitmap create(String contents, int size, int margin, int colorDark, int colorLight) throws IllegalArgumentException {
-        return create(contents, size, margin, DEFAULT_DTA_DOT_SCALE, colorDark, colorLight, null, true, true);
+        return create(contents, size, margin, DEFAULT_DATA_DOT_SCALE, colorDark, colorLight, null, true, true);
     }
 
     public static Bitmap create(String contents, int size, int margin, int colorDark, int colorLight, Bitmap backgroundImage) throws IllegalArgumentException {
-        return create(contents, size, margin, DEFAULT_DTA_DOT_SCALE, colorDark, colorLight, backgroundImage, true, true);
+        return create(contents, size, margin, DEFAULT_DATA_DOT_SCALE, colorDark, colorLight, backgroundImage, true, true);
     }
 
     public static Bitmap create(String contents, int size, int margin, int colorDark, int colorLight, Bitmap backgroundImage, boolean whiteMargin) throws IllegalArgumentException {
-        return create(contents, size, margin, DEFAULT_DTA_DOT_SCALE, colorDark, colorLight, backgroundImage, whiteMargin, true);
+        return create(contents, size, margin, DEFAULT_DATA_DOT_SCALE, colorDark, colorLight, backgroundImage, whiteMargin, true);
     }
 
     public static Bitmap create(String contents, int size, int margin, float dataDotScale, int colorDark, int colorLight, Bitmap backgroundImage, boolean whiteMargin) throws IllegalArgumentException {

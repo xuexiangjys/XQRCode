@@ -1,15 +1,33 @@
+/*
+ * Copyright (C) 2018 xuexiangjys(xuexiangjys@163.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.xuexiang.xqrcode;
 
 import android.graphics.Bitmap;
 import android.hardware.Camera;
 import android.os.Bundle;
-import android.util.Log;
 
 import com.google.zxing.Result;
 import com.xuexiang.xqrcode.camera.CameraManager;
 import com.xuexiang.xqrcode.ui.CaptureFragment;
 import com.xuexiang.xqrcode.util.QRCodeAnalyzeUtils;
 import com.xuexiang.xqrcode.util.QRCodeProduceUtils;
+import com.xuexiang.xqrcode.util.QRCodeProduceUtils.Builder;
+
+import static com.xuexiang.xqrcode.util.QRCodeProduceUtils.QRCODE_BITMAP_MAX_SIZE;
 
 /**
  * <pre>
@@ -43,14 +61,8 @@ public class XQRCode {
     public static final String KEY_LAYOUT_ID = "key_layout_id";
 
 
-
-
-
-
-
-
-
     //==================================CaptureFragment=================================//
+
     /**
      * 获取CaptureFragment设置layout参
      *
@@ -76,6 +88,7 @@ public class XQRCode {
     }
 
     //================================二维码解析===================================//
+
     /**
      * 解析二维码（接口回调返回结果）
      *
@@ -83,14 +96,13 @@ public class XQRCode {
      * @param analyzeCallback
      */
     public static void analyzeQRCode(String QRCodePicPath, QRCodeAnalyzeUtils.AnalyzeCallback analyzeCallback) {
-        Log.e("xuexiang", "QRCodePicPath:" + QRCodePicPath);
         QRCodeAnalyzeUtils.analyze(QRCodePicPath, analyzeCallback);
     }
 
     /**
      * 解析二维码（简单返回结果，扫描失败返回空）
      *
-     * @param QRCodePicPath   二维码图片的路径
+     * @param QRCodePicPath 二维码图片的路径
      */
     public static String analyzeQRCode(String QRCodePicPath) {
         return QRCodeAnalyzeUtils.analyze(QRCodePicPath);
@@ -99,13 +111,14 @@ public class XQRCode {
     /**
      * 获取解析二维码的结果
      *
-     * @param QRCodePicPath   二维码图片的路径
+     * @param QRCodePicPath 二维码图片的路径
      */
     public static Result getAnalyzeQRCodeResult(String QRCodePicPath) {
         return QRCodeAnalyzeUtils.getAnalyzeQRCodeResult(QRCodePicPath);
     }
 
     //================================二维码生成===================================//
+
     /**
      * 生成含图标的二维码图片
      *
@@ -119,7 +132,29 @@ public class XQRCode {
         return QRCodeProduceUtils.create(contents, width, height, logo);
     }
 
+    /**
+     * 生成含图标的二维码图片
+     *
+     * @param contents 二维码写入的数据
+     * @param logo     二维码中央的logo
+     * @return 含图标的二维码
+     */
+    public static Bitmap createQRCodeWithLogo(String contents, Bitmap logo) {
+        return QRCodeProduceUtils.create(contents, QRCODE_BITMAP_MAX_SIZE, QRCODE_BITMAP_MAX_SIZE, logo);
+    }
+
+    /**
+     * 获取二维码生成构建者
+     *
+     * @param contents
+     * @return
+     */
+    public static Builder newQRCodeBuilder(String contents) {
+        return QRCodeProduceUtils.newBuilder(contents);
+    }
+
     //================================FlashLight===================================//
+
     /**
      * 开关闪光灯
      *
