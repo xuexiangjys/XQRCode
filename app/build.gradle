@@ -17,18 +17,41 @@ android {
             }
         }
     }
+
+    signingConfigs {
+        release {
+            storeFile file(app_release.storeFile)
+            storePassword app_release.storePassword
+            keyAlias app_release.keyAlias
+            keyPassword app_release.keyPassword
+        }
+    }
+
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
         }
+    }
+
+    applicationVariants.all { variant ->
+        variant.outputs.all {
+            if (variant.buildType.name.equals('release')) {
+                outputFileName = "xqrcodedemo.apk"
+            }
+        }
+    }
+
+    lintOptions {
+        abortOnError false
     }
 
 }
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation 'com.android.support:appcompat-v7:27.1.1'
+    implementation deps.support.app_compat
 //    implementation project(':xqrcode-lib')
 
     implementation 'com.github.xuexiangjys:XQRCode:1.0.0'
@@ -37,8 +60,8 @@ dependencies {
     implementation 'com.github.xuexiangjys.XAOP:xaop-runtime:1.0.0'  //添加依赖
 
     //XPage
-    implementation 'com.github.xuexiangjys.XPage:xpage-lib:2.1.5'
-    annotationProcessor 'com.github.xuexiangjys.XPage:xpage-compiler:2.1.5'
+    implementation 'com.github.xuexiangjys.XPage:xpage-lib:2.1.7'
+    annotationProcessor 'com.github.xuexiangjys.XPage:xpage-compiler:2.1.7'
     //butterknife的sdk
     implementation 'com.jakewharton:butterknife:8.8.1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
