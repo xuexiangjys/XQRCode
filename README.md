@@ -20,7 +20,7 @@
 
 ### Demo下载
 
-[![downloads](https://img.shields.io/badge/downloads-1.7M-blue.svg)](https://github.com/xuexiangjys/XPage/blob/master/apk/xqrcodedemo.apk?raw=true)
+[![downloads](https://img.shields.io/badge/downloads-1.7M-blue.svg)](https://github.com/xuexiangjys/XQRCode/blob/master/apk/xqrcodedemo.apk?raw=true)
 
 ## 2、如何使用
 目前支持主流开发工具AndroidStudio的使用，直接配置build.gradle，增加依赖即可.
