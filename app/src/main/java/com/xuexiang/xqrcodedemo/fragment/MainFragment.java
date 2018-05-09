@@ -16,6 +16,7 @@
 
 package com.xuexiang.xqrcodedemo.fragment;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -29,7 +30,6 @@ import com.xuexiang.xaop.annotation.Permission;
 import com.xuexiang.xaop.enums.ThreadType;
 import com.xuexiang.xpage.annotation.Page;
 import com.xuexiang.xpage.base.SimpleListFragment;
-import com.xuexiang.xpage.enums.CoreAnim;
 import com.xuexiang.xpage.utils.TitleBar;
 import com.xuexiang.xqrcode.XQRCode;
 import com.xuexiang.xqrcode.ui.CaptureActivity;
@@ -43,6 +43,7 @@ import java.util.List;
 
 import static android.app.Activity.RESULT_OK;
 import static com.xuexiang.xaop.consts.PermissionConsts.CAMERA;
+import static com.xuexiang.xaop.consts.PermissionConsts.STORAGE;
 
 /**
  * <pre>
@@ -98,11 +99,16 @@ public class MainFragment extends SimpleListFragment {
                 openPage(QRCodeProduceFragment.class);
                 break;
             case 3:
-                startActivityForResult(IntentUtils.getDocumentPickerIntent(IntentUtils.DocumentType.IMAGE), REQUEST_IMAGE);
+                selectQRCode();
                 break;
             default:
                 break;
         }
+    }
+
+    @Permission(STORAGE)
+    private void selectQRCode() {
+        startActivityForResult(IntentUtils.getDocumentPickerIntent(IntentUtils.DocumentType.IMAGE), REQUEST_IMAGE);
     }
 
     /**
@@ -140,21 +146,26 @@ public class MainFragment extends SimpleListFragment {
         else if (requestCode == REQUEST_IMAGE) {
             if (data != null) {
                 Uri uri = data.getData();
-
-                XQRCode.analyzeQRCode(PathUtils.getFilePathByUri(getContext(), uri), new QRCodeAnalyzeUtils.AnalyzeCallback() {
-                    @Override
-                    public void onAnalyzeSuccess(Bitmap mBitmap, String result) {
-                        ToastUtils.toast("解析结果:" + result, Toast.LENGTH_LONG);
-                    }
-
-                    @Override
-                    public void onAnalyzeFailed() {
-                        ToastUtils.toast("解析二维码失败", Toast.LENGTH_LONG);
-                    }
-                });
+                getAnalyzeQRCodeResult(uri);
             }
         }
     }
+
+    @SuppressLint("MissingPermission")
+    private void getAnalyzeQRCodeResult(Uri uri) {
+        XQRCode.analyzeQRCode(PathUtils.getFilePathByUri(getContext(), uri), new QRCodeAnalyzeUtils.AnalyzeCallback() {
+            @Override
+            public void onAnalyzeSuccess(Bitmap mBitmap, String result) {
+                ToastUtils.toast("解析结果:" + result, Toast.LENGTH_LONG);
+            }
+
+            @Override
+            public void onAnalyzeFailed() {
+                ToastUtils.toast("解析二维码失败", Toast.LENGTH_LONG);
+            }
+        });
+    }
+
 
     /**
      * 处理二维码扫描结果
