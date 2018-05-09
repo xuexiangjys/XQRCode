@@ -18,30 +18,36 @@ android {
         }
     }
 
-//    signingConfigs {
-//        release {
-//            storeFile file(app_release.storeFile)
-//            storePassword app_release.storePassword
-//            keyAlias app_release.keyAlias
-//            keyPassword app_release.keyPassword
-//        }
-//    }
+    if (isNeedPackage.toBoolean()) {
+        signingConfigs {
+            release {
+                storeFile file(app_release.storeFile)
+                storePassword app_release.storePassword
+                keyAlias app_release.keyAlias
+                keyPassword app_release.keyPassword
+            }
+        }
+    }
 
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-//            signingConfig signingConfigs.release
+            if (isNeedPackage.toBoolean()) {
+                signingConfig signingConfigs.release
+            }
         }
     }
 
-//    applicationVariants.all { variant ->
-//        variant.outputs.all {
-//            if (variant.buildType.name.equals('release')) {
-//                outputFileName = "xqrcodedemo.apk"
-//            }
-//        }
-//    }
+    if (isNeedPackage.toBoolean()) {
+        applicationVariants.all { variant ->
+            variant.outputs.all {
+                if (variant.buildType.name.equals('release')) {
+                    outputFileName = "xqrcodedemo.apk"
+                }
+            }
+        }
+    }
 
     lintOptions {
         abortOnError false
