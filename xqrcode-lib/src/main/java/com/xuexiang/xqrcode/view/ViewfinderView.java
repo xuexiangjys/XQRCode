@@ -108,11 +108,6 @@ public final class ViewfinderView extends View {
         // 扫描框边角宽度
         innercornerwidth = (int) ta.getDimension(R.styleable.ViewfinderView_inner_corner_width, 15);
 
-        // 扫描bitmap
-        Drawable drawable = ta.getDrawable(R.styleable.ViewfinderView_inner_scan_bitmap);
-        if (drawable != null) {
-        }
-
         // 扫描控件
         scanLight = BitmapFactory.decodeResource(getResources(), ta.getResourceId(R.styleable.ViewfinderView_inner_scan_bitmap, R.drawable.xqrcode_ic_scan_light));
         // 扫描速度

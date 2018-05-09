@@ -2,14 +2,23 @@
 <resources>
 
     <declare-styleable name="ViewfinderView">
+        <!-- 扫描框的宽度，默认为屏幕宽度的3／4 -->
         <attr name="inner_width" format="dimension"/>
+        <!-- 扫描框的高度，默认为屏幕宽度的3／4 -->
         <attr name="inner_height" format="dimension"/>
+        <!-- 扫描框距离顶部的距离，默认居中-->
         <attr name="inner_marginTop" format="dimension" />
+        <!-- 扫描框四角的颜色，默认为#45DDDD-->
         <attr name="inner_corner_color" format="color" />
+        <!-- 扫描框四角的长度，默认为65px-->
         <attr name="inner_corner_length" format="dimension" />
+        <!-- 扫描框四角的宽度，默认为15px-->
         <attr name="inner_corner_width" format="dimension" />
+        <!-- 扫描控件图资源，默认为R.drawable.xqrcode_ic_scan_light-->
         <attr name="inner_scan_bitmap" format="reference" />
+        <!-- 扫描速度，默认为5px-->
         <attr name="inner_scan_speed" format="integer" />
+        <!-- 小圆点是否展示，默认为true-->
         <attr name="inner_scan_isCircle" format="boolean" />
     </declare-styleable>
 

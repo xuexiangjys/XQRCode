@@ -124,6 +124,21 @@ private void handleScanResult(Intent data) {
 </FrameLayout>
 ```
 
+ViewfinderView属性表
+
+属性名 | 类型 | 默认值 | 备注
+:-|:-:|:-:|:-
+inner_width | dimension | 屏幕宽度的3／4 | 扫描框的宽度
+inner_height | dimension | 屏幕宽度的3／4 | 扫描框的高度
+inner_marginTop | dimension | 居中效果 | 扫描框距离顶部的距离
+inner_corner_color | color | #45DDDD | 扫描框四角的颜色
+inner_corner_length | dimension | 65px | 扫描框四角的长度
+inner_corner_width | dimension | 15px | 扫描框四角的宽度
+inner_scan_bitmap | reference | R.drawable.xqrcode_ic_scan_light | 扫描控件图资源
+inner_scan_speed | integer | 5px | 扫描速度
+inner_scan_isCircle | boolean | true | 小圆点是否展示
+
+
 （2）调用`XQRCode.getCaptureFragment`的方法，传入自定义扫描界面的布局ID，可以获得带扫描功能的Fragment-`CaptureFragment`，将其填充到页面中。
 
 ```
