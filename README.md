@@ -180,6 +180,13 @@ getChildFragmentManager().beginTransaction().replace(R.id.fl_my_container, captu
 
 2.如果需要完整的二维码解析结果，可调用`XQRCode.getAnalyzeQRCodeResult`方法，传入二维码的绝对路径即可。
 
+## 混淆配置
+
+```
+-dontwarn com.google.zxing.**
+-keep class com.google.zxing.**{*;}
+```
+
 ## 特别感谢
 https://github.com/yipianfengye/android-zxingLibrary
 

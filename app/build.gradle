@@ -9,7 +9,6 @@ android {
         targetSdkVersion 27
         versionCode 1
         versionName "1.0"
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
         javaCompileOptions {
             annotationProcessorOptions {
@@ -66,8 +65,8 @@ dependencies {
     implementation 'com.github.xuexiangjys.XAOP:xaop-runtime:1.0.0'  //添加依赖
 
     //XPage
-    implementation 'com.github.xuexiangjys.XPage:xpage-lib:2.1.7'
-    annotationProcessor 'com.github.xuexiangjys.XPage:xpage-compiler:2.1.7'
+    implementation 'com.github.xuexiangjys.XPage:xpage-lib:2.1.8'
+    annotationProcessor 'com.github.xuexiangjys.XPage:xpage-compiler:2.1.8'
     //butterknife的sdk
     implementation 'com.jakewharton:butterknife:8.8.1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
