@@ -51,7 +51,7 @@ public class App extends Application {
             public List<PageInfo> registerPages(Context context) {
                 return AppPageConfig.getInstance().getPages(); //自动注册页面
             }
-        }).debug("PageLog").enableWatcher(false).init(this);
+        }).debug("PageLog").enableWatcher(true).init(this);
 
 
         XAOP.init(this); //初始化插件

@@ -34,7 +34,7 @@ import com.xuexiang.xaop.annotation.MainThread;
 import com.xuexiang.xaop.annotation.Permission;
 import com.xuexiang.xaop.enums.ThreadType;
 import com.xuexiang.xpage.annotation.Page;
-import com.xuexiang.xpage.base.BaseFragment;
+import com.xuexiang.xpage.base.XPageFragment;
 import com.xuexiang.xqrcode.XQRCode;
 import com.xuexiang.xqrcode.util.QRCodeProduceUtils;
 import com.xuexiang.xqrcodedemo.R;
@@ -62,7 +62,7 @@ import static com.xuexiang.xaop.consts.PermissionConsts.STORAGE;
  * </pre>
  */
 @Page(name = "二维码生成器")
-public class QRCodeProduceFragment extends BaseFragment {
+public class QRCodeProduceFragment extends XPageFragment {
     private final int SELECT_FILE_REQUEST_CODE = 700;
 
     /**

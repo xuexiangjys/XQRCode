@@ -38,7 +38,6 @@ public class CaptureActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.xqrcode_activity_capture);
         CaptureFragment captureFragment = new CaptureFragment();

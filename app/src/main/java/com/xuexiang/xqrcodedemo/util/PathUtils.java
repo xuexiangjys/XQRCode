@@ -16,7 +16,6 @@
 
 package com.xuexiang.xqrcodedemo.util;
 
-import android.annotation.SuppressLint;
 import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.Context;
@@ -26,11 +25,8 @@ import android.os.Build;
 import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
-import android.support.annotation.RequiresPermission;
 
 import java.io.File;
-
-import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
 
 /**
  * <pre>
@@ -89,8 +85,6 @@ public class PathUtils {
      * @param uri
      * @return
      */
-    @SuppressLint("MissingPermission")
-    @RequiresPermission(READ_EXTERNAL_STORAGE)
     public static String getFilePathByUri(Context context, Uri uri) {
         if (context == null || uri == null) return null;
 

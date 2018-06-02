@@ -16,9 +16,11 @@
 
 package com.xuexiang.xqrcode.ui;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.res.AssetFileDescriptor;
 import android.graphics.Bitmap;
+import android.graphics.PixelFormat;
 import android.hardware.Camera;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
@@ -33,6 +35,7 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.Result;
@@ -88,11 +91,24 @@ public class CaptureFragment extends Fragment implements SurfaceHolder.Callback 
         return captureFragment;
     }
 
+    /**
+     * 处理Activity【防止锁屏和fragment里面放surfaceView，第一次黑屏的问题】
+     *
+     * @param activity
+     */
+    public static void onCreate(Activity activity) {
+        if (activity != null) {
+            // 防止锁屏
+            activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+            //为了解决fragment里面放surfaceview，第一次黑屏的问题
+            activity.getWindow().setFormat(PixelFormat.TRANSLUCENT);
+        }
+    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        onCreate(getActivity());
 
         CameraManager.init(Objects.requireNonNull(getActivity()).getApplicationContext());
 
@@ -103,7 +119,6 @@ public class CaptureFragment extends Fragment implements SurfaceHolder.Callback 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-
         Bundle bundle = getArguments();
         View view = null;
         if (bundle != null) {

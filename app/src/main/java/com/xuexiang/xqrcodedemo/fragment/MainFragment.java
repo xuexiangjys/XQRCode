@@ -29,7 +29,7 @@ import com.xuexiang.xaop.annotation.IOThread;
 import com.xuexiang.xaop.annotation.Permission;
 import com.xuexiang.xaop.enums.ThreadType;
 import com.xuexiang.xpage.annotation.Page;
-import com.xuexiang.xpage.base.SimpleListFragment;
+import com.xuexiang.xpage.base.XPageSimpleListFragment;
 import com.xuexiang.xpage.utils.TitleBar;
 import com.xuexiang.xqrcode.XQRCode;
 import com.xuexiang.xqrcode.ui.CaptureActivity;
@@ -53,7 +53,7 @@ import static com.xuexiang.xaop.consts.PermissionConsts.STORAGE;
  * </pre>
  */
 @Page(name = "二维码扫描  XQRCode")
-public class MainFragment extends SimpleListFragment {
+public class MainFragment extends XPageSimpleListFragment {
     /**
      * 扫描跳转Activity RequestCode
      */
