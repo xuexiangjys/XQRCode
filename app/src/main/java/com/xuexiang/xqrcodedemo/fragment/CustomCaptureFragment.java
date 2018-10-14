@@ -16,6 +16,8 @@
 
 package com.xuexiang.xqrcodedemo.fragment;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -63,6 +65,23 @@ public class CustomCaptureFragment extends XPageFragment {
         // 为二维码扫描界面设置定制化界面
         CaptureFragment captureFragment = XQRCode.getCaptureFragment(R.layout.layout_custom_camera);
         captureFragment.setAnalyzeCallback(analyzeCallback);
+        captureFragment.setCameraInitCallBack(new CaptureFragment.CameraInitCallBack() {
+            @Override
+            public void callBack(Exception e) {
+                if (e != null) {
+                    new AlertDialog.Builder(getContext())
+                            .setTitle("注意")
+                            .setMessage("照相机打开失败，请检查权限是否未获取！")
+                            .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    popToBack();
+                                }
+                            })
+                            .show();
+                }
+            }
+        });
         getChildFragmentManager().beginTransaction().replace(R.id.fl_my_container, captureFragment).commit();
     }
 

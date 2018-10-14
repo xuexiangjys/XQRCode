@@ -320,7 +320,7 @@ public class CaptureFragment extends Fragment implements SurfaceHolder.Callback 
         this.callBack = callBack;
     }
 
-    interface CameraInitCallBack {
+    public interface CameraInitCallBack {
         /**
          * Callback for Camera init result.
          * @param e If is's null,means success.otherwise Camera init failed with the Exception.
