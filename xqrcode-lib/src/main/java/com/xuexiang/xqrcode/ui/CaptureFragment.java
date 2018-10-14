@@ -110,7 +110,7 @@ public class CaptureFragment extends Fragment implements SurfaceHolder.Callback 
         super.onCreate(savedInstanceState);
         onCreate(getActivity());
 
-        CameraManager.init(Objects.requireNonNull(getActivity()).getApplicationContext());
+        CameraManager.init(requireNonNull(getActivity()).getApplicationContext());
 
         hasSurface = false;
         inactivityTimer = new InactivityTimer(this.getActivity());
@@ -152,7 +152,7 @@ public class CaptureFragment extends Fragment implements SurfaceHolder.Callback 
         characterSet = null;
 
         playBeep = true;
-        AudioManager audioService = (AudioManager) Objects.requireNonNull(getActivity()).getSystemService(Context.AUDIO_SERVICE);
+        AudioManager audioService = (AudioManager) requireNonNull(getActivity()).getSystemService(Context.AUDIO_SERVICE);
         if (audioService != null && audioService.getRingerMode() != AudioManager.RINGER_MODE_NORMAL) {
             playBeep = false;
         }
@@ -261,7 +261,7 @@ public class CaptureFragment extends Fragment implements SurfaceHolder.Callback 
             // The volume on STREAM_SYSTEM is not adjustable, and users found it
             // too loud,
             // so we now play on the music stream.
-            Objects.requireNonNull(getActivity()).setVolumeControlStream(AudioManager.STREAM_MUSIC);
+            requireNonNull(getActivity()).setVolumeControlStream(AudioManager.STREAM_MUSIC);
             mediaPlayer = new MediaPlayer();
             mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
             mediaPlayer.setOnCompletionListener(beepListener);
@@ -286,7 +286,7 @@ public class CaptureFragment extends Fragment implements SurfaceHolder.Callback 
             mediaPlayer.start();
         }
         if (vibrate) {
-            Vibrator vibrator = (Vibrator) Objects.requireNonNull(getActivity()).getSystemService(getActivity().VIBRATOR_SERVICE);
+            Vibrator vibrator = (Vibrator) requireNonNull(getActivity()).getSystemService(getActivity().VIBRATOR_SERVICE);
             if (vibrator != null) {
                 vibrator.vibrate(VIBRATE_DURATION);
             }
@@ -327,6 +327,13 @@ public class CaptureFragment extends Fragment implements SurfaceHolder.Callback 
          */
         void callBack(Exception e);
     }
+
+    public static <T> T requireNonNull(T obj) {
+        if (obj == null)
+            throw new NullPointerException();
+        return obj;
+    }
+
 
 
 }

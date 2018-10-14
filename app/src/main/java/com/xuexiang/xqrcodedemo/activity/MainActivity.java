@@ -19,6 +19,7 @@ package com.xuexiang.xqrcodedemo.activity;
 import android.os.Bundle;
 
 import com.xuexiang.xpage.base.XPageActivity;
+import com.xuexiang.xqrcode.ui.CaptureFragment;
 import com.xuexiang.xqrcodedemo.fragment.MainFragment;
 
 public class MainActivity extends XPageActivity {
@@ -28,6 +29,9 @@ public class MainActivity extends XPageActivity {
         super.onCreate(savedInstanceState);
         //为了解决fragment里面放surfaceview，第一次黑屏的问题
 //        getWindow().setFormat(PixelFormat.TRANSLUCENT);
+
+        CaptureFragment.onCreate(this);
+
         openPage(MainFragment.class);
     }
 

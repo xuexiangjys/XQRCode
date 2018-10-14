@@ -20,6 +20,7 @@ import android.app.Application;
 import android.content.Context;
 
 import com.xuexiang.xaop.XAOP;
+import com.xuexiang.xaop.annotation.Permission;
 import com.xuexiang.xaop.util.PermissionUtils;
 import com.xuexiang.xpage.AppPageConfig;
 import com.xuexiang.xpage.PageConfig;
@@ -30,6 +31,8 @@ import com.xuexiang.xutil.common.StringUtils;
 import com.xuexiang.xutil.tip.ToastUtils;
 
 import java.util.List;
+
+import static com.xuexiang.xaop.consts.PermissionConsts.CAMERA;
 
 /**
  * <pre>
@@ -64,5 +67,12 @@ public class App extends Application {
             }
 
         });
+
+        initPermission();
+    }
+
+    @Permission(CAMERA)
+    private void initPermission() {
+        ToastUtils.toast("相机权限已获取！");
     }
 }
