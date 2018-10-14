@@ -16,7 +16,6 @@
 
 package com.xuexiang.xqrcodedemo.fragment;
 
-import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -28,6 +27,7 @@ import com.xuexiang.xpage.annotation.Page;
 import com.xuexiang.xpage.base.XPageFragment;
 import com.xuexiang.xpage.enums.CoreAnim;
 import com.xuexiang.xqrcode.XQRCode;
+import com.xuexiang.xqrcode.ui.CaptureActivity;
 import com.xuexiang.xqrcode.ui.CaptureFragment;
 import com.xuexiang.xqrcode.util.QRCodeAnalyzeUtils;
 import com.xuexiang.xqrcodedemo.R;
@@ -69,16 +69,12 @@ public class CustomCaptureFragment extends XPageFragment {
             @Override
             public void callBack(Exception e) {
                 if (e != null) {
-                    new AlertDialog.Builder(getContext())
-                            .setTitle("注意")
-                            .setMessage("照相机打开失败，请检查权限是否未获取！")
-                            .setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    popToBack();
-                                }
-                            })
-                            .show();
+                    CaptureActivity.showNoPermissionTip(getActivity(), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            popToBack();
+                        }
+                    });
                 }
             }
         });

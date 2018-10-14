@@ -209,7 +209,7 @@ public class CaptureFragment extends Fragment implements SurfaceHolder.Callback 
             return;
         }
         if (callBack != null) {
-            callBack.callBack(null);
+            callBack.callBack(null); //打开成功
         }
         if (handler == null) {
             handler = new CaptureActivityHandler(this, decodeFormats, characterSet, viewfinderView);
@@ -325,7 +325,7 @@ public class CaptureFragment extends Fragment implements SurfaceHolder.Callback 
          * Callback for Camera init result.
          * @param e If is's null,means success.otherwise Camera init failed with the Exception.
          */
-        void callBack(Exception e);
+        void callBack(@Nullable Exception e);
     }
 
     public static <T> T requireNonNull(T obj) {

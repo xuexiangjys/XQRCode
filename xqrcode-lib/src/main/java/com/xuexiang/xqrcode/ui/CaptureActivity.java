@@ -16,14 +16,17 @@
 
 package com.xuexiang.xqrcode.ui;
 
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 
 import com.xuexiang.xqrcode.R;
 import com.xuexiang.xqrcode.XQRCode;
-import com.xuexiang.xqrcode.logs.QCLog;
 import com.xuexiang.xqrcode.util.QRCodeAnalyzeUtils;
 
 
@@ -42,14 +45,50 @@ public class CaptureActivity extends AppCompatActivity {
         setContentView(R.layout.xqrcode_activity_capture);
         CaptureFragment captureFragment = new CaptureFragment();
         captureFragment.setAnalyzeCallback(analyzeCallback);
+        captureFragment.setCameraInitCallBack(cameraInitCallBack);
         getSupportFragmentManager().beginTransaction().replace(R.id.fl_zxing_container, captureFragment).commit();
-        captureFragment.setCameraInitCallBack(new CaptureFragment.CameraInitCallBack() {
+    }
+
+    /**
+     * 照相机初始化监听
+     */
+    CaptureFragment.CameraInitCallBack cameraInitCallBack = new CaptureFragment.CameraInitCallBack() {
+        @Override
+        public void callBack(@Nullable Exception e) {
+            if (e != null) {
+                CaptureActivity.showNoPermissionTip(CaptureActivity.this);
+            }
+        }
+    };
+
+    /**
+     * 显示无照相机权限提示
+     *
+     * @param activity
+     * @param listener 确定点击事件
+     * @return
+     */
+    public static AlertDialog showNoPermissionTip(final Activity activity, DialogInterface.OnClickListener listener) {
+        return new AlertDialog.Builder(activity)
+                .setTitle(R.string.xqrcode_pay_attention)
+                .setMessage(R.string.xqrcode_not_get_permission)
+                .setPositiveButton(R.string.xqrcode_submit, listener)
+                .show();
+    }
+
+    /**
+     * 显示无照相机权限提示
+     *
+     * @param activity
+     * @return
+     */
+    public static AlertDialog showNoPermissionTip(final Activity activity) {
+        return showNoPermissionTip(activity, new DialogInterface.OnClickListener() {
             @Override
-            public void callBack(Exception e) {
-                QCLog.e("CaptureActivity", e);
+            public void onClick(DialogInterface dialog, int which) {
+                activity.finish();
             }
         });
-
     }
 
     /**
@@ -63,8 +102,8 @@ public class CaptureActivity extends AppCompatActivity {
             bundle.putInt(XQRCode.RESULT_TYPE, XQRCode.RESULT_SUCCESS);
             bundle.putString(XQRCode.RESULT_DATA, result);
             resultIntent.putExtras(bundle);
-            CaptureActivity.this.setResult(RESULT_OK, resultIntent);
-            CaptureActivity.this.finish();
+            setResult(RESULT_OK, resultIntent);
+            finish();
         }
 
         @Override
@@ -74,8 +113,8 @@ public class CaptureActivity extends AppCompatActivity {
             bundle.putInt(XQRCode.RESULT_TYPE, XQRCode.RESULT_FAILED);
             bundle.putString(XQRCode.RESULT_DATA, "");
             resultIntent.putExtras(bundle);
-            CaptureActivity.this.setResult(RESULT_OK, resultIntent);
-            CaptureActivity.this.finish();
+            setResult(RESULT_OK, resultIntent);
+            finish();
         }
     };
 }
