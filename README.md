@@ -64,12 +64,20 @@ dependencies {
  */
 @Permission(CAMERA)
 @IOThread(ThreadType.Single)
-private void startScan(boolean isCustom) {
-    if (isCustom) {
-        openPageForResult(CustomCaptureFragment.class, null, REQUEST_CUSTOM_SCAN);
-    } else {
-        Intent intent = new Intent(getActivity(), CaptureActivity.class);
-        startActivityForResult(intent, REQUEST_CODE);
+private void startScan(ScanType scanType) {
+    switch(scanType) {
+        case CUSTOM:
+            openPageForResult(CustomCaptureFragment.class, null, REQUEST_CUSTOM_SCAN);
+            break;
+        case DEFAULT:
+            startActivityForResult(new Intent(getActivity(), CaptureActivity.class), REQUEST_CODE);
+            break;
+        case REMOTE:
+            Intent intent = new Intent(XQRCode.ACTION_DEFAULT_CAPTURE);
+            startActivityForResult(intent, REQUEST_CODE);
+            break;
+        default:
+            break;
     }
 }
 
