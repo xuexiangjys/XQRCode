@@ -76,6 +76,7 @@ public class MainFragment extends XPageSimpleListFragment {
     protected List<String> initSimpleData(List<String> lists) {
         lists.add("默认扫描界面");
         lists.add("定制化扫描界面");
+        lists.add("远程扫描界面");
         lists.add("生成二维码图片");
         lists.add("选择二维码进行解析");
         return lists;
@@ -90,15 +91,18 @@ public class MainFragment extends XPageSimpleListFragment {
     protected void onItemClick(int position) {
         switch(position) {
             case 0:
-                startScan(false);
+                startScan(ScanType.DEFAULT);
                 break;
             case 1:
-                startScan(true);
+                startScan(ScanType.CUSTOM);
                 break;
             case 2:
-                openPage(QRCodeProduceFragment.class);
+                startScan(ScanType.REMOTE);
                 break;
             case 3:
+                openPage(QRCodeProduceFragment.class);
+                break;
+            case 4:
                 selectQRCode();
                 break;
             default:
@@ -116,12 +120,20 @@ public class MainFragment extends XPageSimpleListFragment {
      */
     @Permission(CAMERA)
     @IOThread(ThreadType.Single)
-    private void startScan(boolean isCustom) {
-        if (isCustom) {
-            openPageForResult(CustomCaptureFragment.class, null, REQUEST_CUSTOM_SCAN);
-        } else {
-            Intent intent = new Intent(getActivity(), CaptureActivity.class);
-            startActivityForResult(intent, REQUEST_CODE);
+    private void startScan(ScanType scanType) {
+        switch(scanType) {
+            case CUSTOM:
+                openPageForResult(CustomCaptureFragment.class, null, REQUEST_CUSTOM_SCAN);
+                break;
+            case DEFAULT:
+                startActivityForResult(new Intent(getActivity(), CaptureActivity.class), REQUEST_CODE);
+                break;
+            case REMOTE:
+                Intent intent = new Intent(XQRCode.ACTION_DEFAULT_CAPTURE);
+                startActivityForResult(intent, REQUEST_CODE);
+                break;
+            default:
+                break;
         }
     }
 
@@ -205,6 +217,24 @@ public class MainFragment extends XPageSimpleListFragment {
             ClickUtils.exitBy2Click();
         }
         return true;
+    }
+
+    /**
+     * 二维码扫描类型
+     */
+    public enum ScanType {
+        /**
+         * 默认
+         */
+        DEFAULT,
+        /**
+         * 远程
+         */
+        REMOTE,
+        /**
+         * 自定义
+         */
+        CUSTOM,
     }
 
 

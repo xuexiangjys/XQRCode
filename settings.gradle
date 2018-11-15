@@ -1,1 +1,1 @@
-include ':app', ':xqrcode-lib'
+include ':app', ':xqrcode-lib', ':xqrcode_test'

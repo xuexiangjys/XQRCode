@@ -16,13 +16,18 @@
 
 package com.xuexiang.xqrcode.ui;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 
 import com.xuexiang.xqrcode.R;
@@ -39,10 +44,22 @@ import com.xuexiang.xqrcode.util.QRCodeAnalyzeUtils;
  */
 public class CaptureActivity extends AppCompatActivity {
 
+    public final static int REQUEST_CODE_REQUEST_PERMISSIONS = 222;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.xqrcode_activity_capture);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(new String[]{Manifest.permission.CAMERA}, REQUEST_CODE_REQUEST_PERMISSIONS);
+                return;
+            }
+        }
+        initCaptureFragment();
+    }
+
+    private void initCaptureFragment() {
         CaptureFragment captureFragment = new CaptureFragment();
         captureFragment.setAnalyzeCallback(analyzeCallback);
         captureFragment.setCameraInitCallBack(cameraInitCallBack);
@@ -117,4 +134,16 @@ public class CaptureActivity extends AppCompatActivity {
             finish();
         }
     };
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == REQUEST_CODE_REQUEST_PERMISSIONS) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                initCaptureFragment();
+            } else {
+                CaptureActivity.showNoPermissionTip(CaptureActivity.this);
+            }
+        }
+    }
 }

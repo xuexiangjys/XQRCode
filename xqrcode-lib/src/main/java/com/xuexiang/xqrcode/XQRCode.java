@@ -62,6 +62,11 @@ public class XQRCode {
     public static final String KEY_LAYOUT_ID = "key_layout_id";
 
     /**
+     * 默认二维码扫描的activity启动
+     */
+    public static final String ACTION_DEFAULT_CAPTURE = "com.xuexiang.xqrcode.ui.captureactivity";
+
+    /**
      * 设置是否打开调试
      *
      * @param isDebug
