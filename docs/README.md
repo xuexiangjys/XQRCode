@@ -27,7 +27,7 @@ allprojects {
 ```
 dependencies {
   ...
-  implementation 'com.github.xuexiangjys:XQRCode:1.0.1'
+  implementation 'com.github.xuexiangjys:XQRCode:1.0.2'
 }
 ```
 
@@ -38,7 +38,7 @@ https://github.com/yipianfengye/android-zxingLibrary
 
 [![](https://img.shields.io/badge/点击一键加入QQ交流群-602082750-blue.svg)](http://shang.qq.com/wpa/qunwpa?idkey=9922861ef85c19f1575aecea0e8680f60d9386080a97ed310c971ae074998887)
 
-[xqsvg]: https://img.shields.io/badge/XQRCode-v1.0.1-brightgreen.svg
+[xqsvg]: https://img.shields.io/badge/XQRCode-v1.0.2-brightgreen.svg
 [xq]: https://github.com/xuexiangjys/XQRCode
 [apisvg]: https://img.shields.io/badge/API-14+-brightgreen.svg
 [api]: https://android-arsenal.com/api?level=14
