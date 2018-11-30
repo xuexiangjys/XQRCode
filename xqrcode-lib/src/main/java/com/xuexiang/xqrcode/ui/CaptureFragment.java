@@ -43,7 +43,7 @@ import com.google.zxing.Result;
 import com.xuexiang.xqrcode.R;
 import com.xuexiang.xqrcode.XQRCode;
 import com.xuexiang.xqrcode.camera.CameraManager;
-import com.xuexiang.xqrcode.decoding.CaptureActivityHandler;
+import com.xuexiang.xqrcode.decoding.CaptureFragmentHandler;
 import com.xuexiang.xqrcode.decoding.InactivityTimer;
 import com.xuexiang.xqrcode.util.QRCodeAnalyzeUtils;
 import com.xuexiang.xqrcode.view.ViewfinderView;
@@ -63,7 +63,7 @@ import static android.Manifest.permission_group.CAMERA;
  */
 public class CaptureFragment extends Fragment implements SurfaceHolder.Callback {
 
-    private CaptureActivityHandler handler;
+    private CaptureFragmentHandler handler;
     private ViewfinderView viewfinderView;
     private boolean hasSurface;
     private Vector<BarcodeFormat> decodeFormats;
@@ -215,7 +215,7 @@ public class CaptureFragment extends Fragment implements SurfaceHolder.Callback 
             callBack.callBack(null); //打开成功
         }
         if (handler == null) {
-            handler = new CaptureActivityHandler(this, decodeFormats, characterSet, viewfinderView);
+            handler = new CaptureFragmentHandler(this, decodeFormats, characterSet, viewfinderView);
         }
     }
 

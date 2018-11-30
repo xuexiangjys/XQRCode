@@ -38,9 +38,9 @@ import java.util.Vector;
 /**
  * This class handles all the messaging which comprises the state machine for capture.
  */
-public final class CaptureActivityHandler extends Handler {
+public final class CaptureFragmentHandler extends Handler {
 
-    private static final String TAG = CaptureActivityHandler.class.getSimpleName();
+    private static final String TAG = CaptureFragmentHandler.class.getSimpleName();
 
     private final CaptureFragment fragment;
     private final DecodeThread decodeThread;
@@ -52,7 +52,7 @@ public final class CaptureActivityHandler extends Handler {
         DONE
     }
 
-    public CaptureActivityHandler(CaptureFragment fragment, Vector<BarcodeFormat> decodeFormats,
+    public CaptureFragmentHandler(CaptureFragment fragment, Vector<BarcodeFormat> decodeFormats,
                                   String characterSet, ViewfinderView viewfinderView) {
         this.fragment = fragment;
         decodeThread = new DecodeThread(fragment, decodeFormats, characterSet,
@@ -67,7 +67,6 @@ public final class CaptureActivityHandler extends Handler {
     @Override
     public void handleMessage(Message message) {
         if (message.what == R.id.auto_focus) {
-            //QCLog.dTag(TAG, "Got auto-focus message");
             // When one auto focus pass finishes, start another. This is the closest thing to
             // continuous AF. It does seem to hunt a bit, but I'm not sure what else to do.
             if (state == State.PREVIEW) {
@@ -83,9 +82,9 @@ public final class CaptureActivityHandler extends Handler {
 
             /***********************************************************************/
             Bitmap barcode = bundle == null ? null :
-                    (Bitmap) bundle.getParcelable(DecodeThread.BARCODE_BITMAP);//���ñ����߳�
+                    (Bitmap) bundle.getParcelable(DecodeThread.BARCODE_BITMAP);
 
-            fragment.handleDecode((Result) message.obj, barcode);//���ؽ��
+            fragment.handleDecode((Result) message.obj, barcode);
             /***********************************************************************/
         } else if (message.what == R.id.decode_failed) {
             // We're decoding as fast as possible, so when one decode fails, start another.
