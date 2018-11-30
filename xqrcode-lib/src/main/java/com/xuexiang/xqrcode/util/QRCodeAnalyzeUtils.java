@@ -154,7 +154,9 @@ public final class QRCodeAnalyzeUtils {
      * @return bitmap
      */
     public static Bitmap getBitmap(final String filePath, final int maxWidth, final int maxHeight) {
-        if (!isFileExists(filePath)) return null;
+        if (!isFileExists(filePath)) {
+            return null;
+        }
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
         BitmapFactory.decodeFile(filePath, options);
@@ -214,7 +216,9 @@ public final class QRCodeAnalyzeUtils {
     }
 
     private static boolean isSpace(final String s) {
-        if (s == null) return true;
+        if (s == null) {
+            return true;
+        }
         for (int i = 0, len = s.length(); i < len; ++i) {
             if (!Character.isWhitespace(s.charAt(i))) {
                 return false;

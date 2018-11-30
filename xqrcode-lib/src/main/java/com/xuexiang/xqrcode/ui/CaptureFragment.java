@@ -289,7 +289,7 @@ public class CaptureFragment extends Fragment implements SurfaceHolder.Callback 
             mediaPlayer.start();
         }
         if (vibrate) {
-            Vibrator vibrator = (Vibrator) requireNonNull(getActivity()).getSystemService(getActivity().VIBRATOR_SERVICE);
+            Vibrator vibrator = (Vibrator) requireNonNull(getActivity()).getSystemService(Context.VIBRATOR_SERVICE);
             if (vibrator != null) {
                 vibrator.vibrate(VIBRATE_DURATION);
             }
@@ -300,6 +300,7 @@ public class CaptureFragment extends Fragment implements SurfaceHolder.Callback 
      * When the beep has finished playing, rewind to queue up another one.
      */
     private final MediaPlayer.OnCompletionListener beepListener = new MediaPlayer.OnCompletionListener() {
+        @Override
         public void onCompletion(MediaPlayer mediaPlayer) {
             mediaPlayer.seekTo(0);
         }
@@ -333,8 +334,9 @@ public class CaptureFragment extends Fragment implements SurfaceHolder.Callback 
     }
 
     public static <T> T requireNonNull(T obj) {
-        if (obj == null)
+        if (obj == null) {
             throw new NullPointerException();
+        }
         return obj;
     }
 

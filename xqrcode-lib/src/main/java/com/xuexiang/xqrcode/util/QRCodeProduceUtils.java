@@ -22,6 +22,7 @@ import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.text.TextUtils;
+
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.EncodeHintType;
 import com.google.zxing.WriterException;
@@ -90,6 +91,7 @@ public final class QRCodeProduceUtils {
 
     /**
      * 获取二维码生成构建者
+     *
      * @param contents
      * @return
      */
@@ -283,6 +285,7 @@ public final class QRCodeProduceUtils {
 
         /**
          * 生成二维码
+         *
          * @return
          */
         public Bitmap build() {
@@ -454,6 +457,8 @@ public final class QRCodeProduceUtils {
                         );
                         s += "　";
                         break;
+                    default:
+                        break;
                 }
             }
             QCLog.dTag("QR_MAPPING", s);
@@ -524,12 +529,15 @@ public final class QRCodeProduceUtils {
         int edgeCenter = agnCenter[agnCenter.length - 1];
         for (int agnY : agnCenter) {
             for (int agnX : agnCenter) {
-                if (edgeOnly && agnX != 6 && agnY != 6 && agnX != edgeCenter && agnY != edgeCenter)
+                if (edgeOnly && agnX != 6 && agnY != 6 && agnX != edgeCenter && agnY != edgeCenter) {
                     continue;
-                if ((agnX == 6 && agnY == 6) || (agnX == 6 && agnY == edgeCenter) || (agnY == 6 && agnX == edgeCenter))
+                }
+                if ((agnX == 6 && agnY == 6) || (agnX == 6 && agnY == edgeCenter) || (agnY == 6 && agnX == edgeCenter)) {
                     continue;
-                if (x >= agnX - 2 && x <= agnX + 2 && y >= agnY - 2 && y <= agnY + 2)
+                }
+                if (x >= agnX - 2 && x <= agnX + 2 && y >= agnY - 2 && y <= agnY + 2) {
                     return true;
+                }
             }
         }
         return false;
@@ -576,7 +584,9 @@ public final class QRCodeProduceUtils {
                 r = (color >> 16) & 0xFF;
                 g = (color >> 8) & 0xFF;
                 b = color & 0xFF;
-                if (r > 200 || g > 200 || b > 200) continue;
+                if (r > 200 || g > 200 || b > 200) {
+                    continue;
+                }
                 red += r;
                 green += g;
                 blue += b;
@@ -673,7 +683,9 @@ public final class QRCodeProduceUtils {
     }
 
     private static Bitmap getScaleLogo(Bitmap logo, int w, int h) {
-        if (logo == null) return null;
+        if (logo == null) {
+            return null;
+        }
         Matrix matrix = new Matrix();
         float scaleFactor = Math.min(w * 1.0f / 5 / logo.getWidth(), h * 1.0f / 5 / logo.getHeight());
         matrix.postScale(scaleFactor, scaleFactor);
