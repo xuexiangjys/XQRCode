@@ -57,9 +57,19 @@ public class XQRCode {
     public static final int RESULT_FAILED = 2;
 
     /**
-     * CaptureFragment
+     * CaptureFragment加载的容器Id
      */
     public static final String KEY_LAYOUT_ID = "key_layout_id";
+
+    /**
+     * 是否是重复扫码
+     */
+    public static final String KEY_IS_REPEATED = "key_is_repeated";
+
+    /**
+     * 扫码的间隙
+     */
+    public static final String KEY_SCAN_INTERVAL = "key_scan_interval";
 
     /**
      * 默认二维码扫描的activity启动
@@ -87,12 +97,25 @@ public class XQRCode {
     //==================================CaptureFragment=================================//
 
     /**
-     * 获取CaptureFragment设置layout参
+     * 获取CaptureFragment设置layout参数
      *
      * @param layoutId
      */
     public static CaptureFragment getCaptureFragment(int layoutId) {
         return CaptureFragment.newInstance(layoutId);
+    }
+
+
+    /**
+     * 获取CaptureFragment设置扫码参数
+     *
+     * @param layoutId     布局id
+     * @param isRepeated   是否重复扫码
+     * @param scanInterval 扫码间隙
+     * @return
+     */
+    public static CaptureFragment getCaptureFragment(int layoutId, boolean isRepeated, long scanInterval) {
+        return CaptureFragment.newInstance(layoutId, isRepeated, scanInterval);
     }
 
     /**
@@ -102,11 +125,23 @@ public class XQRCode {
      * @param layoutId
      */
     public static void setFragmentArgs(CaptureFragment captureFragment, int layoutId) {
+        setFragmentArgs(captureFragment, layoutId, false, 0);
+    }
+
+    /**
+     * 为CaptureFragment设置layout参数
+     *
+     * @param captureFragment
+     * @param layoutId
+     */
+    public static void setFragmentArgs(CaptureFragment captureFragment, int layoutId, boolean isRepeated, long scanInterval) {
         if (captureFragment == null || layoutId == -1) {
             return;
         }
         Bundle bundle = new Bundle();
         bundle.putInt(KEY_LAYOUT_ID, layoutId);
+        bundle.putBoolean(KEY_IS_REPEATED, isRepeated);
+        bundle.putLong(KEY_SCAN_INTERVAL, scanInterval);
         captureFragment.setArguments(bundle);
     }
 

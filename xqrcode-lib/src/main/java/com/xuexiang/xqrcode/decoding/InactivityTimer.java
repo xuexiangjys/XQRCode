@@ -25,7 +25,10 @@ import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Finishes an activity after a period of inactivity.
+ * 定时关闭界面（默认5分钟）
+ *
+ * @author xuexiang
+ * @since 2019/1/17 上午12:06
  */
 public final class InactivityTimer {
 
@@ -33,25 +36,25 @@ public final class InactivityTimer {
 
     private final ScheduledExecutorService inactivityTimer =
             Executors.newSingleThreadScheduledExecutor(new DaemonThreadFactory());
-    private final Activity activity;
-    private ScheduledFuture<?> inactivityFuture = null;
+    private final Activity mActivity;
+    private ScheduledFuture<?> mInactivityFuture = null;
 
     public InactivityTimer(Activity activity) {
-        this.activity = activity;
+        mActivity = activity;
         onActivity();
     }
 
     public void onActivity() {
         cancel();
-        inactivityFuture = inactivityTimer.schedule(new FinishListener(activity),
+        mInactivityFuture = inactivityTimer.schedule(new FinishListener(mActivity),
                 INACTIVITY_DELAY_SECONDS,
                 TimeUnit.SECONDS);
     }
 
     private void cancel() {
-        if (inactivityFuture != null) {
-            inactivityFuture.cancel(true);
-            inactivityFuture = null;
+        if (mInactivityFuture != null) {
+            mInactivityFuture.cancel(true);
+            mInactivityFuture = null;
         }
     }
 

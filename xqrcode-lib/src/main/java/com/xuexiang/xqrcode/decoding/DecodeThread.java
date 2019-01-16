@@ -22,68 +22,67 @@ import android.os.Looper;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.DecodeHintType;
 import com.google.zxing.ResultPointCallback;
-import com.xuexiang.xqrcode.ui.CaptureFragment;
+import com.xuexiang.xqrcode.ui.ICaptureView;
 
 import java.util.Hashtable;
 import java.util.Vector;
 import java.util.concurrent.CountDownLatch;
 
 /**
- * <pre>
- *     desc   : This thread does all the heavy lifting of decoding the images.
- *     author : xuexiang
- *     time   : 2018/5/3 上午1:31
- * </pre>
+ * 解码线程
+ *
+ * @author xuexiang
+ * @since 2019/1/17 上午12:03
  */
 final class DecodeThread extends Thread {
 
     public static final String BARCODE_BITMAP = "barcode_bitmap";
-    private final CaptureFragment fragment;
-    private final Hashtable<DecodeHintType, Object> hints;
-    private Handler handler;
-    private final CountDownLatch handlerInitLatch;
+    private final ICaptureView mCaptureView;
+    private final Hashtable<DecodeHintType, Object> mHints;
+    private Handler mHandler;
+    private final CountDownLatch mHandlerInitLatch;
 
-    DecodeThread(CaptureFragment fragment,
+    DecodeThread(ICaptureView captureView,
                  Vector<BarcodeFormat> decodeFormats,
                  String characterSet,
                  ResultPointCallback resultPointCallback) {
 
-        this.fragment = fragment;
-        handlerInitLatch = new CountDownLatch(1);
+        mCaptureView = captureView;
+        mHandlerInitLatch = new CountDownLatch(1);
 
-        hints = new Hashtable<DecodeHintType, Object>(3);
+        mHints = new Hashtable<>(3);
 
         if (decodeFormats == null || decodeFormats.isEmpty()) {
-            decodeFormats = new Vector<BarcodeFormat>();
+            decodeFormats = new Vector<>();
             decodeFormats.addAll(DecodeFormatManager.ONE_D_FORMATS);
             decodeFormats.addAll(DecodeFormatManager.QR_CODE_FORMATS);
             decodeFormats.addAll(DecodeFormatManager.DATA_MATRIX_FORMATS);
         }
 
-        hints.put(DecodeHintType.POSSIBLE_FORMATS, decodeFormats);
+        mHints.put(DecodeHintType.POSSIBLE_FORMATS, decodeFormats);
 
         if (characterSet != null) {
-            hints.put(DecodeHintType.CHARACTER_SET, characterSet);
+            mHints.put(DecodeHintType.CHARACTER_SET, characterSet);
         }
 
-        hints.put(DecodeHintType.NEED_RESULT_POINT_CALLBACK, resultPointCallback);
+        mHints.put(DecodeHintType.NEED_RESULT_POINT_CALLBACK, resultPointCallback);
     }
 
     Handler getHandler() {
         try {
-            handlerInitLatch.await();
+            mHandlerInitLatch.await();
         } catch (InterruptedException e) {
             e.printStackTrace();
             // continue?
         }
-        return handler;
+        return mHandler;
     }
 
     @Override
     public void run() {
         Looper.prepare();
-        handler = new DecodeHandler(fragment, hints);
-        handlerInitLatch.countDown();
+        mHandler = new DecodeHandler(mCaptureView, mHints);
+        mHandlerInitLatch.countDown();
         Looper.loop();
     }
 

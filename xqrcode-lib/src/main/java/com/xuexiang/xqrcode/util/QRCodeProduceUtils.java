@@ -645,7 +645,7 @@ public final class QRCodeProduceUtils {
             }
             Hashtable<EncodeHintType, Object> hints = new Hashtable<EncodeHintType, Object>();
             hints.put(EncodeHintType.CHARACTER_SET, "utf-8");
-            //容错级别
+            //容错级别默认设置为最高H
             hints.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.H);
             //设置空白边距的宽度
             hints.put(EncodeHintType.MARGIN, 0);

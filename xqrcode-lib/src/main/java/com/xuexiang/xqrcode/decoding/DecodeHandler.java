@@ -20,6 +20,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+
 import com.google.zxing.BinaryBitmap;
 import com.google.zxing.DecodeHintType;
 import com.google.zxing.MultiFormatReader;
@@ -27,24 +28,30 @@ import com.google.zxing.ReaderException;
 import com.google.zxing.Result;
 import com.google.zxing.common.HybridBinarizer;
 import com.xuexiang.xqrcode.R;
-import com.xuexiang.xqrcode.logs.QCLog;
-import com.xuexiang.xqrcode.ui.CaptureFragment;
 import com.xuexiang.xqrcode.camera.CameraManager;
 import com.xuexiang.xqrcode.camera.PlanarYUVLuminanceSource;
+import com.xuexiang.xqrcode.logs.QCLog;
+import com.xuexiang.xqrcode.ui.ICaptureView;
 
 import java.util.Hashtable;
 
+/**
+ * 解码处理（解码的核心）
+ *
+ * @author xuexiang
+ * @since 2019/1/17 上午12:01
+ */
 final class DecodeHandler extends Handler {
 
     private static final String TAG = DecodeHandler.class.getSimpleName();
 
-    private final CaptureFragment fragment;
-    private final MultiFormatReader multiFormatReader;
+    private final ICaptureView mCaptureView;
+    private final MultiFormatReader mMultiFormatReader;
 
-    DecodeHandler(CaptureFragment fragment, Hashtable<DecodeHintType, Object> hints) {
-        multiFormatReader = new MultiFormatReader();
-        multiFormatReader.setHints(hints);
-        this.fragment = fragment;
+    DecodeHandler(ICaptureView captureView, Hashtable<DecodeHintType, Object> hints) {
+        mMultiFormatReader = new MultiFormatReader();
+        mMultiFormatReader.setHints(hints);
+        mCaptureView = captureView;
     }
 
     @Override
@@ -57,8 +64,7 @@ final class DecodeHandler extends Handler {
     }
 
     /**
-     * Decode the data within the viewfinder rectangle, and time how long it took. For efficiency,
-     * reuse the same reader objects from one decode to the next.
+     * 主要的解码方法
      *
      * @param data   The YUV preview frame.
      * @param width  The width of the preview frame.
@@ -71,34 +77,36 @@ final class DecodeHandler extends Handler {
         //modify here
         byte[] rotatedData = new byte[data.length];
         for (int y = 0; y < height; y++) {
-            for (int x = 0; x < width; x++)
+            for (int x = 0; x < width; x++) {
                 rotatedData[x * height + height - y - 1] = data[x + y * width];
+            }
         }
-        int tmp = width; // Here we are swapping, that's the difference to #11
+        // Here we are swapping, that's the difference to #11
+        int tmp = width;
         width = height;
         height = tmp;
 
         PlanarYUVLuminanceSource source = CameraManager.get().buildLuminanceSource(rotatedData, width, height);
         BinaryBitmap bitmap = new BinaryBitmap(new HybridBinarizer(source));
         try {
-            rawResult = multiFormatReader.decodeWithState(bitmap);
+            //解码
+            rawResult = mMultiFormatReader.decodeWithState(bitmap);
         } catch (ReaderException re) {
             // continue
         } finally {
-            multiFormatReader.reset();
+            mMultiFormatReader.reset();
         }
 
         if (rawResult != null) {
             long end = System.currentTimeMillis();
             QCLog.dTag(TAG, "Found barcode (" + (end - start) + " ms):\n" + rawResult.toString());
-            Message message = Message.obtain(fragment.getHandler(), R.id.decode_succeeded, rawResult);
+            Message message = Message.obtain(mCaptureView.getCaptureHandler(), R.id.decode_succeeded, rawResult);
             Bundle bundle = new Bundle();
             bundle.putParcelable(DecodeThread.BARCODE_BITMAP, source.renderCroppedGreyscaleBitmap());
             message.setData(bundle);
-            //Log.d(TAG, "Sending decode succeeded message...");
             message.sendToTarget();
         } else {
-            Message message = Message.obtain(fragment.getHandler(), R.id.decode_failed);
+            Message message = Message.obtain(mCaptureView.getCaptureHandler(), R.id.decode_failed);
             message.sendToTarget();
         }
     }

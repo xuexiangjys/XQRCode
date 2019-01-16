@@ -44,13 +44,14 @@ import java.util.List;
 import static android.app.Activity.RESULT_OK;
 import static com.xuexiang.xaop.consts.PermissionConsts.CAMERA;
 import static com.xuexiang.xaop.consts.PermissionConsts.STORAGE;
+import static com.xuexiang.xqrcode.XQRCode.KEY_IS_REPEATED;
+import static com.xuexiang.xqrcode.XQRCode.KEY_SCAN_INTERVAL;
 
 /**
- * <pre>
- *     desc   : 二维码扫描
- *     author : xuexiang
- *     time   : 2018/5/4 下午11:35
- * </pre>
+ *  二维码扫描
+ *
+ * @author xuexiang
+ * @since 2019/1/16 下午11:56
  */
 @Page(name = "二维码扫描  XQRCode")
 public class MainFragment extends XPageSimpleListFragment {
@@ -66,6 +67,7 @@ public class MainFragment extends XPageSimpleListFragment {
      * 定制化扫描界面Request Code
      */
     public static final int REQUEST_CUSTOM_SCAN = 113;
+
     /**
      * 初始化例子
      *
@@ -75,7 +77,8 @@ public class MainFragment extends XPageSimpleListFragment {
     @Override
     protected List<String> initSimpleData(List<String> lists) {
         lists.add("默认扫描界面");
-        lists.add("定制化扫描界面");
+        lists.add("定制化扫描界面(单次）");
+        lists.add("定制化扫描界面(多次）");
         lists.add("远程扫描界面");
         lists.add("生成二维码图片");
         lists.add("选择二维码进行解析");
@@ -89,20 +92,23 @@ public class MainFragment extends XPageSimpleListFragment {
      */
     @Override
     protected void onItemClick(int position) {
-        switch(position) {
+        switch (position) {
             case 0:
                 startScan(ScanType.DEFAULT);
                 break;
             case 1:
-                startScan(ScanType.CUSTOM);
+                startScan(ScanType.CUSTOM_SINGLE);
                 break;
             case 2:
-                startScan(ScanType.REMOTE);
+                startScan(ScanType.CUSTOM_MULTIPLE);
                 break;
             case 3:
-                openPage(QRCodeProduceFragment.class);
+                startScan(ScanType.REMOTE);
                 break;
             case 4:
+                openPage(QRCodeProduceFragment.class);
+                break;
+            case 5:
                 selectQRCode();
                 break;
             default:
@@ -121,9 +127,12 @@ public class MainFragment extends XPageSimpleListFragment {
     @Permission(CAMERA)
     @IOThread(ThreadType.Single)
     private void startScan(ScanType scanType) {
-        switch(scanType) {
-            case CUSTOM:
-                openPageForResult(CustomCaptureFragment.class, null, REQUEST_CUSTOM_SCAN);
+        switch (scanType) {
+            case CUSTOM_SINGLE:
+                openPageForResult(CustomCaptureFragment.class, getScanParam(false, 0), REQUEST_CUSTOM_SCAN);
+                break;
+            case CUSTOM_MULTIPLE:
+                openPage(CustomCaptureFragment.class, getScanParam(true, 1000));
                 break;
             case DEFAULT:
                 startActivityForResult(new Intent(getActivity(), CaptureActivity.class), REQUEST_CODE);
@@ -135,6 +144,20 @@ public class MainFragment extends XPageSimpleListFragment {
             default:
                 break;
         }
+    }
+
+    /**
+     * 获取扫描参数
+     *
+     * @param isRepeated
+     * @param scanInterval
+     * @return
+     */
+    private Bundle getScanParam(boolean isRepeated, long scanInterval) {
+        Bundle bundle = new Bundle();
+        bundle.putBoolean(KEY_IS_REPEATED, isRepeated);
+        bundle.putLong(KEY_SCAN_INTERVAL, scanInterval);
+        return bundle;
     }
 
     @Override
@@ -181,6 +204,7 @@ public class MainFragment extends XPageSimpleListFragment {
 
     /**
      * 处理二维码扫描结果
+     *
      * @param data
      */
     private void handleScanResult(Intent data) {
@@ -232,11 +256,14 @@ public class MainFragment extends XPageSimpleListFragment {
          */
         REMOTE,
         /**
-         * 自定义
+         * 自定义(单次）
          */
-        CUSTOM,
+        CUSTOM_SINGLE,
+        /**
+         * 自定义(多次）
+         */
+        CUSTOM_MULTIPLE
     }
-
 
 
 }

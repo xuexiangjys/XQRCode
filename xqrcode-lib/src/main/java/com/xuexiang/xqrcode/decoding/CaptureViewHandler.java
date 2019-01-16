@@ -27,38 +27,50 @@ import android.os.Message;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.Result;
 import com.xuexiang.xqrcode.R;
-import com.xuexiang.xqrcode.logs.QCLog;
-import com.xuexiang.xqrcode.ui.CaptureFragment;
 import com.xuexiang.xqrcode.camera.CameraManager;
+import com.xuexiang.xqrcode.logs.QCLog;
+import com.xuexiang.xqrcode.ui.ICaptureView;
 import com.xuexiang.xqrcode.view.ViewfinderResultPointCallback;
 import com.xuexiang.xqrcode.view.ViewfinderView;
 
 import java.util.Vector;
 
 /**
- * This class handles all the messaging which comprises the state machine for capture.
+ * 扫描界面处理者
+ *
+ * @author xuexiang
+ * @since 2019/1/17 上午12:09
  */
-public final class CaptureFragmentHandler extends Handler {
+public final class CaptureViewHandler extends Handler {
 
-    private static final String TAG = CaptureFragmentHandler.class.getSimpleName();
+    private static final String TAG = CaptureViewHandler.class.getSimpleName();
 
-    private final CaptureFragment fragment;
-    private final DecodeThread decodeThread;
-    private State state;
+    private final ICaptureView mCaptureView;
+    private final DecodeThread mDecodeThread;
+    private State mState;
 
     private enum State {
+        /**
+         * 扫描预览中
+         */
         PREVIEW,
+        /**
+         * 扫描成功
+         */
         SUCCESS,
+        /**
+         * 结束
+         */
         DONE
     }
 
-    public CaptureFragmentHandler(CaptureFragment fragment, Vector<BarcodeFormat> decodeFormats,
-                                  String characterSet, ViewfinderView viewfinderView) {
-        this.fragment = fragment;
-        decodeThread = new DecodeThread(fragment, decodeFormats, characterSet,
+    public CaptureViewHandler(ICaptureView captureView, Vector<BarcodeFormat> decodeFormats,
+                              String characterSet, ViewfinderView viewfinderView) {
+        mCaptureView = captureView;
+        mDecodeThread = new DecodeThread(captureView, decodeFormats, characterSet,
                 new ViewfinderResultPointCallback(viewfinderView));
-        decodeThread.start();
-        state = State.SUCCESS;
+        mDecodeThread.start();
+        mState = State.SUCCESS;
         // Start ourselves capturing previews and decoding.
         CameraManager.get().startPreview();
         restartPreviewAndDecode();
@@ -69,7 +81,7 @@ public final class CaptureFragmentHandler extends Handler {
         if (message.what == R.id.auto_focus) {
             // When one auto focus pass finishes, start another. This is the closest thing to
             // continuous AF. It does seem to hunt a bit, but I'm not sure what else to do.
-            if (state == State.PREVIEW) {
+            if (mState == State.PREVIEW) {
                 CameraManager.get().requestAutoFocus(this, R.id.auto_focus);
             }
         } else if (message.what == R.id.restart_preview) {
@@ -77,39 +89,39 @@ public final class CaptureFragmentHandler extends Handler {
             restartPreviewAndDecode();
         } else if (message.what == R.id.decode_succeeded) {
             QCLog.dTag(TAG, "Got decode succeeded message");
-            state = State.SUCCESS;
+            mState = State.SUCCESS;
             Bundle bundle = message.getData();
 
             /***********************************************************************/
             Bitmap barcode = bundle == null ? null :
                     (Bitmap) bundle.getParcelable(DecodeThread.BARCODE_BITMAP);
 
-            fragment.handleDecode((Result) message.obj, barcode);
+            mCaptureView.handleDecode((Result) message.obj, barcode);
             /***********************************************************************/
         } else if (message.what == R.id.decode_failed) {
             // We're decoding as fast as possible, so when one decode fails, start another.
-            state = State.PREVIEW;
-            CameraManager.get().requestPreviewFrame(decodeThread.getHandler(), R.id.decode);
+            mState = State.PREVIEW;
+            CameraManager.get().requestPreviewFrame(mDecodeThread.getHandler(), R.id.decode);
         } else if (message.what == R.id.return_scan_result) {
             QCLog.dTag(TAG, "Got return scan result message");
-            fragment.getActivity().setResult(Activity.RESULT_OK, (Intent) message.obj);
-            fragment.getActivity().finish();
+            mCaptureView.getActivity().setResult(Activity.RESULT_OK, (Intent) message.obj);
+            mCaptureView.getActivity().finish();
         } else if (message.what == R.id.launch_product_query) {
             QCLog.dTag(TAG, "Got product query message");
             String url = (String) message.obj;
             Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
-            fragment.getActivity().startActivity(intent);
+            mCaptureView.getActivity().startActivity(intent);
         }
     }
 
     public void quitSynchronously() {
-        state = State.DONE;
+        mState = State.DONE;
         CameraManager.get().stopPreview();
-        Message quit = Message.obtain(decodeThread.getHandler(), R.id.quit);
+        Message quit = Message.obtain(mDecodeThread.getHandler(), R.id.quit);
         quit.sendToTarget();
         try {
-            decodeThread.join();
+            mDecodeThread.join();
         } catch (InterruptedException e) {
             // continue
         }
@@ -120,11 +132,11 @@ public final class CaptureFragmentHandler extends Handler {
     }
 
     private void restartPreviewAndDecode() {
-        if (state == State.SUCCESS) {
-            state = State.PREVIEW;
-            CameraManager.get().requestPreviewFrame(decodeThread.getHandler(), R.id.decode);
+        if (mState == State.SUCCESS) {
+            mState = State.PREVIEW;
+            CameraManager.get().requestPreviewFrame(mDecodeThread.getHandler(), R.id.decode);
             CameraManager.get().requestAutoFocus(this, R.id.auto_focus);
-            fragment.drawViewfinder();
+            mCaptureView.drawViewfinder();
         }
     }
 

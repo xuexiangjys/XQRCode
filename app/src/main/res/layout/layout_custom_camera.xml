@@ -31,7 +31,7 @@
         app:inner_corner_color="@color/scan_corner_color"
         app:inner_corner_length="30dp"
         app:inner_corner_width="5dp"
-        app:inner_marginTop="120dp"
+        app:inner_marginTop="80dp"
         app:inner_scan_bitmap="@mipmap/ic_scan_image"
         app:inner_scan_isCircle="false"
         app:inner_scan_speed="10"

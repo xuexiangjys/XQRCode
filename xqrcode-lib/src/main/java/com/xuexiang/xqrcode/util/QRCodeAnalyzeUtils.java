@@ -74,10 +74,10 @@ public final class QRCodeAnalyzeUtils {
     /**
      * 解析二维码（简单返回结果，扫描失败返回空）
      *
-     * @param QRCodePicPath 二维码图片的路径
+     * @param qrCodePicPath 二维码图片的路径
      */
-    public static String analyze(String QRCodePicPath) {
-        Result rawResult = getAnalyzeQRCodeResult(QRCodePicPath);
+    public static String analyze(String qrCodePicPath) {
+        Result rawResult = getAnalyzeQRCodeResult(qrCodePicPath);
         if (rawResult != null) {
             return rawResult.getText();
         } else {
@@ -88,10 +88,10 @@ public final class QRCodeAnalyzeUtils {
     /**
      * 获取解析二维码的结果
      *
-     * @param QRCodePicPath 二维码图片的路径
+     * @param qrCodePicPath 二维码图片的路径
      */
-    public static Result getAnalyzeQRCodeResult(String QRCodePicPath) {
-        Bitmap bitmap = getQRCodeBitmap(QRCodePicPath);
+    public static Result getAnalyzeQRCodeResult(String qrCodePicPath) {
+        Bitmap bitmap = getQRCodeBitmap(qrCodePicPath);
         return analyze(bitmap);
     }
 
@@ -99,11 +99,11 @@ public final class QRCodeAnalyzeUtils {
     /**
      * 获取二维码图片
      *
-     * @param QRCodePicPath 二维码图片的路径
+     * @param qrCodePicPath 二维码图片的路径
      * @return
      */
-    private static Bitmap getQRCodeBitmap(String QRCodePicPath) {
-        return getBitmap(QRCodePicPath, QRCODE_BITMAP_MAX_SIZE, QRCODE_BITMAP_MAX_SIZE);
+    private static Bitmap getQRCodeBitmap(String qrCodePicPath) {
+        return getBitmap(qrCodePicPath, QRCODE_BITMAP_MAX_SIZE, QRCODE_BITMAP_MAX_SIZE);
     }
 
     /**
@@ -113,7 +113,7 @@ public final class QRCodeAnalyzeUtils {
      * @return 解析结果
      */
     @Nullable
-    private static Result analyze(Bitmap bitmap) {
+    public static Result analyze(Bitmap bitmap) {
         MultiFormatReader multiFormatReader = new MultiFormatReader();
 
         // 解码的参数
@@ -121,7 +121,7 @@ public final class QRCodeAnalyzeUtils {
         // 可以解析的编码类型
         Vector<BarcodeFormat> decodeFormats = new Vector<BarcodeFormat>();
         if (decodeFormats.isEmpty()) {
-            decodeFormats = new Vector<BarcodeFormat>();
+            decodeFormats = new Vector<>();
 
             // 这里设置可扫描的类型，我这里选择了都支持
             decodeFormats.addAll(DecodeFormatManager.ONE_D_FORMATS);

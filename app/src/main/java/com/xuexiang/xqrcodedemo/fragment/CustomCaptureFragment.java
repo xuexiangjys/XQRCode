@@ -36,17 +36,22 @@ import com.xuexiang.xutil.tip.ToastUtils;
 import butterknife.OnClick;
 
 import static android.app.Activity.RESULT_OK;
+import static com.xuexiang.xqrcode.XQRCode.KEY_IS_REPEATED;
+import static com.xuexiang.xqrcode.XQRCode.KEY_SCAN_INTERVAL;
 
 /**
- * <pre>
- *     desc   : 自定义二维码扫描界面
- *     author : xuexiang
- *     time   : 2018/5/6 下午11:48
- * </pre>
+ * 自定义二维码扫描界面
+ *
+ * @author xuexiang
+ * @since 2019/1/16 下午11:56
  */
-@Page(name = "二维码扫描", anim = CoreAnim.none)
+@Page(name = "二维码扫描", anim = CoreAnim.none, params = {KEY_IS_REPEATED, KEY_SCAN_INTERVAL})
 public class CustomCaptureFragment extends XPageFragment {
     public static boolean isOpen = false;
+
+    private boolean mIsRepeated;
+    private long mScanInterval;
+
     /**
      * 布局的资源id
      *
@@ -57,13 +62,22 @@ public class CustomCaptureFragment extends XPageFragment {
         return R.layout.fragment_custom_capture;
     }
 
+    @Override
+    protected void initArgs() {
+        Bundle bundle = getArguments();
+        if (bundle != null) {
+            mIsRepeated = bundle.getBoolean(XQRCode.KEY_IS_REPEATED);
+            mScanInterval = bundle.getLong(XQRCode.KEY_SCAN_INTERVAL);
+        }
+    }
+
     /**
      * 初始化控件
      */
     @Override
     protected void initViews() {
         // 为二维码扫描界面设置定制化界面
-        CaptureFragment captureFragment = XQRCode.getCaptureFragment(R.layout.layout_custom_camera);
+        CaptureFragment captureFragment = XQRCode.getCaptureFragment(R.layout.layout_custom_camera, mIsRepeated, mScanInterval);
         captureFragment.setAnalyzeCallback(analyzeCallback);
         captureFragment.setCameraInitCallBack(new CaptureFragment.CameraInitCallBack() {
             @Override
@@ -86,14 +100,18 @@ public class CustomCaptureFragment extends XPageFragment {
      */
     QRCodeAnalyzeUtils.AnalyzeCallback analyzeCallback = new QRCodeAnalyzeUtils.AnalyzeCallback() {
         @Override
-        public void onAnalyzeSuccess(Bitmap mBitmap, String result) {
-            Intent resultIntent = new Intent();
-            Bundle bundle = new Bundle();
-            bundle.putInt(XQRCode.RESULT_TYPE, XQRCode.RESULT_SUCCESS);
-            bundle.putString(XQRCode.RESULT_DATA, result);
-            resultIntent.putExtras(bundle);
-            setFragmentResult(RESULT_OK, resultIntent);
-            popToBack();
+        public void onAnalyzeSuccess(Bitmap bitmap, String result) {
+            if (mIsRepeated) {
+                ToastUtils.toast("扫描结果:" + result);
+            } else {
+                Intent resultIntent = new Intent();
+                Bundle bundle = new Bundle();
+                bundle.putInt(XQRCode.RESULT_TYPE, XQRCode.RESULT_SUCCESS);
+                bundle.putString(XQRCode.RESULT_DATA, result);
+                resultIntent.putExtras(bundle);
+                setFragmentResult(RESULT_OK, resultIntent);
+                popToBack();
+            }
         }
 
         @Override

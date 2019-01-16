@@ -47,13 +47,13 @@ public final class ViewfinderView extends View {
     private static final long ANIMATION_DELAY = 100L;
     private static final int OPAQUE = 0xFF;
 
-    private final Paint paint;
-    private Bitmap resultBitmap;
-    private final int maskColor;
-    private final int resultColor;
-    private final int resultPointColor;
-    private Collection<ResultPoint> possibleResultPoints;
-    private Collection<ResultPoint> lastPossibleResultPoints;
+    private final Paint mPaint;
+    private Bitmap mResultBitmap;
+    private final int mMaskColor;
+    private final int mResultColor;
+    private final int mResultPointColor;
+    private Collection<ResultPoint> mPossibleResultPoints;
+    private Collection<ResultPoint> mLastPossibleResultPoints;
 
     public ViewfinderView(Context context) {
         this(context, null);
@@ -66,12 +66,12 @@ public final class ViewfinderView extends View {
 
     public ViewfinderView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        paint = new Paint();
+        mPaint = new Paint();
         Resources resources = getResources();
-        maskColor = resources.getColor(R.color.viewfinder_mask);
-        resultColor = resources.getColor(R.color.result_view);
-        resultPointColor = resources.getColor(R.color.possible_result_points);
-        possibleResultPoints = new HashSet<>(5);
+        mMaskColor = resources.getColor(R.color.viewfinder_mask);
+        mResultColor = resources.getColor(R.color.result_view);
+        mResultPointColor = resources.getColor(R.color.possible_result_points);
+        mPossibleResultPoints = new HashSet<>(5);
 
         scanLight = BitmapFactory.decodeResource(resources,
                 R.drawable.xqrcode_ic_scan_light);
@@ -127,45 +127,45 @@ public final class ViewfinderView extends View {
         int height = canvas.getHeight();
 
         // Draw the exterior (i.e. outside the framing rect) darkened
-        paint.setColor(resultBitmap != null ? resultColor : maskColor);
-        canvas.drawRect(0, 0, width, frame.top, paint);
-        canvas.drawRect(0, frame.top, frame.left, frame.bottom + 1, paint);
-        canvas.drawRect(frame.right + 1, frame.top, width, frame.bottom + 1, paint);
-        canvas.drawRect(0, frame.bottom + 1, width, height, paint);
+        mPaint.setColor(mResultBitmap != null ? mResultColor : mMaskColor);
+        canvas.drawRect(0, 0, width, frame.top, mPaint);
+        canvas.drawRect(0, frame.top, frame.left, frame.bottom + 1, mPaint);
+        canvas.drawRect(frame.right + 1, frame.top, width, frame.bottom + 1, mPaint);
+        canvas.drawRect(0, frame.bottom + 1, width, height, mPaint);
 
-        if (resultBitmap != null) {
+        if (mResultBitmap != null) {
             // Draw the opaque result bitmap over the scanning rectangle
-            paint.setAlpha(OPAQUE);
-            canvas.drawBitmap(resultBitmap, frame.left, frame.top, paint);
+            mPaint.setAlpha(OPAQUE);
+            canvas.drawBitmap(mResultBitmap, frame.left, frame.top, mPaint);
         } else {
 
             drawFrameBounds(canvas, frame);
 
             drawScanLight(canvas, frame);
 
-            Collection<ResultPoint> currentPossible = possibleResultPoints;
-            Collection<ResultPoint> currentLast = lastPossibleResultPoints;
+            Collection<ResultPoint> currentPossible = mPossibleResultPoints;
+            Collection<ResultPoint> currentLast = mLastPossibleResultPoints;
             if (currentPossible.isEmpty()) {
-                lastPossibleResultPoints = null;
+                mLastPossibleResultPoints = null;
             } else {
-                possibleResultPoints = new HashSet<ResultPoint>(5);
-                lastPossibleResultPoints = currentPossible;
-                paint.setAlpha(OPAQUE);
-                paint.setColor(resultPointColor);
+                mPossibleResultPoints = new HashSet<ResultPoint>(5);
+                mLastPossibleResultPoints = currentPossible;
+                mPaint.setAlpha(OPAQUE);
+                mPaint.setColor(mResultPointColor);
 
                 if (isCircle) {
                     for (ResultPoint point : currentPossible) {
-                        canvas.drawCircle(frame.left + point.getX(), frame.top + point.getY(), 6.0f, paint);
+                        canvas.drawCircle(frame.left + point.getX(), frame.top + point.getY(), 6.0f, mPaint);
                     }
                 }
             }
             if (currentLast != null) {
-                paint.setAlpha(OPAQUE / 2);
-                paint.setColor(resultPointColor);
+                mPaint.setAlpha(OPAQUE / 2);
+                mPaint.setColor(mResultPointColor);
 
                 if (isCircle) {
                     for (ResultPoint point : currentLast) {
-                        canvas.drawCircle(frame.left + point.getX(), frame.top + point.getY(), 3.0f, paint);
+                        canvas.drawCircle(frame.left + point.getX(), frame.top + point.getY(), 3.0f, mPaint);
                     }
                 }
             }
@@ -202,7 +202,7 @@ public final class ViewfinderView extends View {
         }
         Rect scanRect = new Rect(frame.left, scanLineTop, frame.right,
                 scanLineTop + 30);
-        canvas.drawBitmap(scanLight, null, scanRect, paint);
+        canvas.drawBitmap(scanLight, null, scanRect, mPaint);
     }
 
 
@@ -221,48 +221,42 @@ public final class ViewfinderView extends View {
      */
     private void drawFrameBounds(Canvas canvas, Rect frame) {
 
-        /*paint.setColor(Color.WHITE);
-        paint.setStrokeWidth(2);
-        paint.setStyle(Paint.Style.STROKE);
-
-        canvas.drawRect(frame, paint);*/
-
-        paint.setColor(innercornercolor);
-        paint.setStyle(Paint.Style.FILL);
+        mPaint.setColor(innercornercolor);
+        mPaint.setStyle(Paint.Style.FILL);
 
         int corWidth = innercornerwidth;
         int corLength = innercornerlength;
 
         // 左上角
         canvas.drawRect(frame.left, frame.top, frame.left + corWidth, frame.top
-                + corLength, paint);
+                + corLength, mPaint);
         canvas.drawRect(frame.left, frame.top, frame.left
-                + corLength, frame.top + corWidth, paint);
+                + corLength, frame.top + corWidth, mPaint);
         // 右上角
         canvas.drawRect(frame.right - corWidth, frame.top, frame.right,
-                frame.top + corLength, paint);
+                frame.top + corLength, mPaint);
         canvas.drawRect(frame.right - corLength, frame.top,
-                frame.right, frame.top + corWidth, paint);
+                frame.right, frame.top + corWidth, mPaint);
         // 左下角
         canvas.drawRect(frame.left, frame.bottom - corLength,
-                frame.left + corWidth, frame.bottom, paint);
+                frame.left + corWidth, frame.bottom, mPaint);
         canvas.drawRect(frame.left, frame.bottom - corWidth, frame.left
-                + corLength, frame.bottom, paint);
+                + corLength, frame.bottom, mPaint);
         // 右下角
         canvas.drawRect(frame.right - corWidth, frame.bottom - corLength,
-                frame.right, frame.bottom, paint);
+                frame.right, frame.bottom, mPaint);
         canvas.drawRect(frame.right - corLength, frame.bottom - corWidth,
-                frame.right, frame.bottom, paint);
+                frame.right, frame.bottom, mPaint);
     }
 
 
     public void drawViewfinder() {
-        resultBitmap = null;
+        mResultBitmap = null;
         invalidate();
     }
 
     public void addPossibleResultPoint(ResultPoint point) {
-        possibleResultPoints.add(point);
+        mPossibleResultPoints.add(point);
     }
 
 
