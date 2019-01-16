@@ -11,6 +11,7 @@
 
 * 支持快速集成条形码、二维码扫描功能。
 * 支持自定义扫描界面。
+* 支持二维码多次扫描。
 * 支持生成带图标的二维码。
 * 支持生成带背景图片的复杂二维码。
 * 支持二维码解析功能
@@ -45,7 +46,7 @@ allprojects {
 ```
 dependencies {
   ...
-  implementation 'com.github.xuexiangjys:XQRCode:1.0.2'
+  implementation 'com.github.xuexiangjys:XQRCode:1.0.3'
 }
 ```
 
@@ -204,7 +205,7 @@ https://github.com/yipianfengye/android-zxingLibrary
 
 ![](https://github.com/xuexiangjys/XPage/blob/master/img/qq_group.jpg)
 
-[xqsvg]: https://img.shields.io/badge/XQRCode-v1.0.2-brightgreen.svg
+[xqsvg]: https://img.shields.io/badge/XQRCode-v1.0.3-brightgreen.svg
 [xq]: https://github.com/xuexiangjys/XQRCode
 [apisvg]: https://img.shields.io/badge/API-14+-brightgreen.svg
 [api]: https://android-arsenal.com/api?level=14
