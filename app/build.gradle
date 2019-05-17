@@ -2,11 +2,13 @@ apply plugin: 'com.android.application'
 apply plugin: 'com.xuexiang.xaop' //引用xaop插件
 
 android {
-    compileSdkVersion 27
+    compileSdkVersion build_versions.target_sdk
+    buildToolsVersion build_versions.build_tools
+
     defaultConfig {
         applicationId "com.xuexiang.xqrcodedemo"
-        minSdkVersion 19
-        targetSdkVersion 27
+        minSdkVersion 14
+        targetSdkVersion build_versions.target_sdk
         versionCode 1
         versionName "1.0"
 
@@ -57,22 +59,22 @@ android {
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation deps.support.app_compat
-//    implementation project(':xqrcode-lib')
+    implementation project(':xqrcode-lib')
 
-    implementation 'com.github.xuexiangjys:XQRCode:1.0.3'
+//    implementation 'com.github.xuexiangjys:XQRCode:1.0.3'
 
-    implementation 'com.github.xuexiangjys.XUtil:xutil-core:1.1.2'
-    implementation 'com.github.xuexiangjys.XAOP:xaop-runtime:1.0.1'  //添加依赖
+    implementation 'com.github.xuexiangjys.XUtil:xutil-core:1.1.5'
+    implementation 'com.github.xuexiangjys.XAOP:xaop-runtime:1.0.3'  //添加依赖
 
     //XPage
-    implementation 'com.github.xuexiangjys.XPage:xpage-lib:2.2.1'
-    annotationProcessor 'com.github.xuexiangjys.XPage:xpage-compiler:2.2.1'
+    implementation 'com.github.xuexiangjys.XPage:xpage-lib:2.2.5'
+    annotationProcessor 'com.github.xuexiangjys.XPage:xpage-compiler:2.2.5'
     //butterknife的sdk
     implementation 'com.jakewharton:butterknife:8.8.1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
 
     //如果开启了内存泄漏监测leak,就需要加上这个依赖
-    debugImplementation 'com.squareup.leakcanary:leakcanary-android:1.5.4'
-    releaseImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.4'
-    testImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.4'
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:1.6.3'
+    releaseImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.6.3'
+    testImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.6.3'
 }

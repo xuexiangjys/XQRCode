@@ -28,26 +28,54 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 
 import com.xuexiang.xqrcode.R;
 import com.xuexiang.xqrcode.XQRCode;
 import com.xuexiang.xqrcode.util.QRCodeAnalyzeUtils;
 
-
 /**
- * <pre>
- *     desc   : 默认的二维码扫描Activity
- *     author : xuexiang
- *     time   : 2018/5/3 上午1:42
- * </pre>
+ * 默认的二维码扫描Activity
+ *
+ * @author xuexiang
+ * @since 2019/5/17 18:31
  */
 public class CaptureActivity extends AppCompatActivity {
 
     public final static int REQUEST_CODE_REQUEST_PERMISSIONS = 222;
 
+    public final static String KEY_CAPTURE_THEME = "com.xuexiang.xqrcode.ui.KEY_CAPTURE_THEME";
+
+    /**
+     * 开始二维码扫描
+     *
+     * @param fragment
+     * @param requestCode 请求码
+     * @param theme       主题
+     */
+    public static void start(Fragment fragment, int requestCode, int theme) {
+        Intent intent = new Intent(fragment.getContext(), CaptureActivity.class);
+        intent.putExtra(KEY_CAPTURE_THEME, theme);
+        fragment.startActivityForResult(intent, requestCode);
+    }
+
+    /**
+     * 开始二维码扫描
+     *
+     * @param activity
+     * @param requestCode 请求码
+     * @param theme       主题
+     */
+    public static void start(Activity activity, int requestCode, int theme) {
+        Intent intent = new Intent(activity, CaptureActivity.class);
+        intent.putExtra(KEY_CAPTURE_THEME, theme);
+        activity.startActivityForResult(intent, requestCode);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        setTheme(getIntent().getIntExtra(KEY_CAPTURE_THEME, R.style.XQRCodeTheme));
         super.onCreate(savedInstanceState);
         setContentView(R.layout.xqrcode_activity_capture);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {

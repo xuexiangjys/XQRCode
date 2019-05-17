@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <dimen name="default_inner_corner_length">32dp</dimen>
+    <dimen name="default_inner_corner_width">8dp</dimen>
+
+
+
+</resources>

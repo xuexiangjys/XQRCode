@@ -10,7 +10,7 @@
         <attr name="inner_marginTop" format="dimension" />
         <!-- 扫描框四角的颜色，默认为#45DDDD-->
         <attr name="inner_corner_color" format="color" />
-        <!-- 扫描框四角的长度，默认为65px-->
+        <!-- 扫描框四角的长度，默认为32dp-->
         <attr name="inner_corner_length" format="dimension" />
         <!-- 扫描框四角的宽度，默认为15px-->
         <attr name="inner_corner_width" format="dimension" />
@@ -20,6 +20,10 @@
         <attr name="inner_scan_speed" format="integer" />
         <!-- 小圆点是否展示，默认为true-->
         <attr name="inner_scan_isCircle" format="boolean" />
+        <attr name="inner_result_color" format="color" />
+        <attr name="inner_result_point_color" format="color" />
+        <attr name="inner_mask_color" format="color" />
     </declare-styleable>
+    <attr name="ViewfinderViewStyle" format="reference" />
 
 </resources>

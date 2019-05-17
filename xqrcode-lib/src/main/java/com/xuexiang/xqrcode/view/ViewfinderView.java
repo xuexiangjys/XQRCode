@@ -22,7 +22,6 @@ import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.util.AttributeSet;
@@ -36,11 +35,10 @@ import java.util.Collection;
 import java.util.HashSet;
 
 /**
- * <pre>
- *     desc   : 自定义组件实现,扫描功能
- *     author : xuexiang
- *     time   : 2018/5/5 上午12:48
- * </pre>
+ * 自定义组件实现,扫描功能
+ *
+ * @author xuexiang
+ * @since 2019/5/17 17:54
  */
 public final class ViewfinderView extends View {
 
@@ -49,9 +47,9 @@ public final class ViewfinderView extends View {
 
     private final Paint mPaint;
     private Bitmap mResultBitmap;
-    private final int mMaskColor;
-    private final int mResultColor;
-    private final int mResultPointColor;
+    private int mMaskColor;
+    private int mResultColor;
+    private int mResultPointColor;
     private Collection<ResultPoint> mPossibleResultPoints;
     private Collection<ResultPoint> mLastPossibleResultPoints;
 
@@ -60,23 +58,14 @@ public final class ViewfinderView extends View {
     }
 
     public ViewfinderView(Context context, AttributeSet attrs) {
-        this(context, attrs, -1);
-
+        this(context, attrs, R.attr.ViewfinderViewStyle);
     }
 
     public ViewfinderView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         mPaint = new Paint();
-        Resources resources = getResources();
-        mMaskColor = resources.getColor(R.color.viewfinder_mask);
-        mResultColor = resources.getColor(R.color.result_view);
-        mResultPointColor = resources.getColor(R.color.possible_result_points);
         mPossibleResultPoints = new HashSet<>(5);
-
-        scanLight = BitmapFactory.decodeResource(resources,
-                R.drawable.xqrcode_ic_scan_light);
-
-        initInnerRect(context, attrs);
+        initInnerRect(context, attrs, defStyleAttr);
     }
 
     /**
@@ -85,35 +74,37 @@ public final class ViewfinderView extends View {
      * @param context
      * @param attrs
      */
-    private void initInnerRect(Context context, AttributeSet attrs) {
-        TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.ViewfinderView);
+    private void initInnerRect(Context context, AttributeSet attrs, int defStyleAttr) {
+        Resources resources = getResources();
+
+        TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.ViewfinderView, defStyleAttr, 0);
 
         // 扫描框距离顶部
-        float innerMarginTop = ta.getDimension(R.styleable.ViewfinderView_inner_marginTop, -1);
+        int innerMarginTop = ta.getDimensionPixelSize(R.styleable.ViewfinderView_inner_marginTop, -1);
         if (innerMarginTop != -1) {
-            CameraManager.FRAME_MARGIN_TOP = (int) innerMarginTop;
+            CameraManager.FRAME_MARGIN_TOP = innerMarginTop;
         }
 
         // 扫描框的宽度
-        CameraManager.FRAME_WIDTH = (int) ta.getDimension(R.styleable.ViewfinderView_inner_width, getDefaultScanSize(getContext()));
-
+        CameraManager.FRAME_WIDTH = ta.getDimensionPixelSize(R.styleable.ViewfinderView_inner_width, getDefaultScanSize(getContext()));
         // 扫描框的高度
-        CameraManager.FRAME_HEIGHT = (int) ta.getDimension(R.styleable.ViewfinderView_inner_height, getDefaultScanSize(getContext()));
+        CameraManager.FRAME_HEIGHT = ta.getDimensionPixelSize(R.styleable.ViewfinderView_inner_height, getDefaultScanSize(getContext()));
 
         // 扫描框边角颜色
-        innercornercolor = ta.getColor(R.styleable.ViewfinderView_inner_corner_color, Color.parseColor("#45DDDD"));
+        innercornercolor = ta.getColor(R.styleable.ViewfinderView_inner_corner_color, resources.getColor(R.color.default_inner_corner_color));
         // 扫描框边角长度
-        innercornerlength = (int) ta.getDimension(R.styleable.ViewfinderView_inner_corner_length, 65);
+        innercornerlength = ta.getDimensionPixelSize(R.styleable.ViewfinderView_inner_corner_length, resources.getDimensionPixelSize(R.dimen.default_inner_corner_length));
         // 扫描框边角宽度
-        innercornerwidth = (int) ta.getDimension(R.styleable.ViewfinderView_inner_corner_width, 15);
-
+        innercornerwidth = ta.getDimensionPixelSize(R.styleable.ViewfinderView_inner_corner_width, resources.getDimensionPixelSize(R.dimen.default_inner_corner_width));
         // 扫描控件
         scanLight = BitmapFactory.decodeResource(getResources(), ta.getResourceId(R.styleable.ViewfinderView_inner_scan_bitmap, R.drawable.xqrcode_ic_scan_light));
         // 扫描速度
-        SCAN_VELOCITY = ta.getInt(R.styleable.ViewfinderView_inner_scan_speed, 5);
-
+        scanVelocity = ta.getInt(R.styleable.ViewfinderView_inner_scan_speed, 5);
         isCircle = ta.getBoolean(R.styleable.ViewfinderView_inner_scan_isCircle, true);
 
+        mMaskColor = ta.getColor(R.styleable.ViewfinderView_inner_mask_color, resources.getColor(R.color.default_mask_color));
+        mResultColor = ta.getColor(R.styleable.ViewfinderView_inner_result_color, resources.getColor(R.color.default_result_color));
+        mResultPointColor = ta.getColor(R.styleable.ViewfinderView_inner_result_point_color, resources.getColor(R.color.default_result_point_color));
         ta.recycle();
     }
 
@@ -138,7 +129,6 @@ public final class ViewfinderView extends View {
             mPaint.setAlpha(OPAQUE);
             canvas.drawBitmap(mResultBitmap, frame.left, frame.top, mPaint);
         } else {
-
             drawFrameBounds(canvas, frame);
 
             drawScanLight(canvas, frame);
@@ -148,7 +138,7 @@ public final class ViewfinderView extends View {
             if (currentPossible.isEmpty()) {
                 mLastPossibleResultPoints = null;
             } else {
-                mPossibleResultPoints = new HashSet<ResultPoint>(5);
+                mPossibleResultPoints = new HashSet<>(5);
                 mLastPossibleResultPoints = currentPossible;
                 mPaint.setAlpha(OPAQUE);
                 mPaint.setColor(mResultPointColor);
@@ -169,7 +159,6 @@ public final class ViewfinderView extends View {
                     }
                 }
             }
-
             postInvalidateDelayed(ANIMATION_DELAY, frame.left, frame.top, frame.right, frame.bottom);
         }
     }
@@ -177,7 +166,7 @@ public final class ViewfinderView extends View {
     // 扫描线移动的y
     private int scanLineTop;
     // 扫描线移动速度
-    private int SCAN_VELOCITY;
+    private int scanVelocity;
     // 扫描线
     private Bitmap scanLight;
     // 是否展示小圆点
@@ -198,7 +187,7 @@ public final class ViewfinderView extends View {
         if (scanLineTop >= frame.bottom - 30) {
             scanLineTop = frame.top;
         } else {
-            scanLineTop += SCAN_VELOCITY;
+            scanLineTop += scanVelocity;
         }
         Rect scanRect = new Rect(frame.left, scanLineTop, frame.right,
                 scanLineTop + 30);

@@ -34,6 +34,7 @@ import com.xuexiang.xpage.utils.TitleBar;
 import com.xuexiang.xqrcode.XQRCode;
 import com.xuexiang.xqrcode.ui.CaptureActivity;
 import com.xuexiang.xqrcode.util.QRCodeAnalyzeUtils;
+import com.xuexiang.xqrcodedemo.R;
 import com.xuexiang.xqrcodedemo.util.PathUtils;
 import com.xuexiang.xutil.app.IntentUtils;
 import com.xuexiang.xutil.common.ClickUtils;
@@ -135,7 +136,7 @@ public class MainFragment extends XPageSimpleListFragment {
                 openPage(CustomCaptureFragment.class, getScanParam(true, 1000));
                 break;
             case DEFAULT:
-                startActivityForResult(new Intent(getActivity(), CaptureActivity.class), REQUEST_CODE);
+                XQRCode.startScan(this, REQUEST_CODE, R.style.XQRCodeTheme_Custom);
                 break;
             case REMOTE:
                 Intent intent = new Intent(XQRCode.ACTION_DEFAULT_CAPTURE);

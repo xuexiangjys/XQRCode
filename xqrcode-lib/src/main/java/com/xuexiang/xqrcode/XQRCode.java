@@ -16,13 +16,17 @@
 
 package com.xuexiang.xqrcode;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.hardware.Camera;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 
 import com.google.zxing.Result;
 import com.xuexiang.xqrcode.camera.CameraManager;
 import com.xuexiang.xqrcode.logs.QCLog;
+import com.xuexiang.xqrcode.ui.CaptureActivity;
 import com.xuexiang.xqrcode.ui.CaptureFragment;
 import com.xuexiang.xqrcode.util.QRCodeAnalyzeUtils;
 import com.xuexiang.xqrcode.util.QRCodeProduceUtils;
@@ -92,6 +96,50 @@ public class XQRCode {
      */
     public static void debug(String tag) {
         QCLog.debug(tag);
+    }
+
+    //==================================调用默认二维码扫描=================================//
+
+    /**
+     * 开始二维码扫描
+     *
+     * @param fragment
+     * @param requestCode 请求码
+     */
+    public static void startScan(Fragment fragment, int requestCode) {
+        CaptureActivity.start(fragment, requestCode, R.style.XQRCodeTheme);
+    }
+
+    /**
+     * 开始二维码扫描
+     *
+     * @param fragment
+     * @param requestCode 请求码
+     * @param theme       主题
+     */
+    public static void startScan(Fragment fragment, int requestCode, int theme) {
+        CaptureActivity.start(fragment, requestCode, theme);
+    }
+
+    /**
+     * 开始二维码扫描
+     *
+     * @param activity
+     * @param requestCode 请求码
+     */
+    public static void startScan(Activity activity, int requestCode) {
+        CaptureActivity.start(activity, requestCode, R.style.XQRCodeTheme);
+    }
+
+    /**
+     * 开始二维码扫描
+     *
+     * @param activity
+     * @param requestCode 请求码
+     * @param theme       主题
+     */
+    public static void startScan(Activity activity, int requestCode, int theme) {
+        CaptureActivity.start(activity, requestCode, theme);
     }
 
     //==================================CaptureFragment=================================//

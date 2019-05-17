@@ -15,7 +15,7 @@
             android:name="com.xuexiang.xqrcode.ui.CaptureActivity"
             android:configChanges="screenSize|keyboardHidden|orientation|keyboard"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.NoActionBar"
+            android:theme="@style/XQRCodeTheme"
             android:windowSoftInputMode="stateAlwaysHidden">
             <intent-filter>
                 <action android:name="com.xuexiang.xqrcode.ui.captureactivity" />

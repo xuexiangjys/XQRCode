@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="XQRCodeTheme" parent="Theme.AppCompat.NoActionBar">
+        <item name="ViewfinderViewStyle">@style/ViewfinderView</item>
+    </style>
+
+    <style name="ViewfinderView">
+        <item name="inner_corner_color">@color/default_inner_corner_color</item>
+        <item name="inner_corner_length">@dimen/default_inner_corner_length</item>
+        <item name="inner_corner_width">@dimen/default_inner_corner_width</item>
+        <item name="inner_scan_bitmap">@drawable/xqrcode_ic_scan_light</item>
+        <item name="inner_scan_speed">5</item>
+        <item name="inner_scan_isCircle">true</item>
+        <item name="inner_result_color">@color/default_result_color</item>
+        <item name="inner_result_point_color">@color/default_result_point_color</item>
+        <item name="inner_mask_color">@color/default_mask_color</item>
+    </style>
+
+
+</resources>

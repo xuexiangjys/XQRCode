@@ -8,4 +8,13 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <!-- 自定义默认二维码扫描界面的主题. -->
+    <style name="XQRCodeTheme.Custom">
+        <item name="ViewfinderViewStyle">@style/ViewfinderView.Custom</item>
+    </style>
+
+    <style name="ViewfinderView.Custom">
+        <item name="inner_corner_color">#123456</item>
+    </style>
+
 </resources>
