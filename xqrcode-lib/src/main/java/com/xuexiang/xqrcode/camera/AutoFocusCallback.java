@@ -20,13 +20,20 @@ import android.hardware.Camera;
 import android.os.Handler;
 import android.os.Message;
 
+import com.xuexiang.xqrcode.XQRCode;
 import com.xuexiang.xqrcode.logs.QCLog;
 
+/**
+ * 自动聚焦的回掉
+ *
+ * @author xuexiang
+ * @since 2019-05-18 17:23
+ */
 public final class AutoFocusCallback implements Camera.AutoFocusCallback {
 
     private static final String TAG = AutoFocusCallback.class.getSimpleName();
 
-    private static final long AUTOFOCUS_INTERVAL_MS = 1500L;
+    public static final long AUTO_FOCUS_INTERVAL_MS = 1500L;
 
     private Handler autoFocusHandler;
     private int autoFocusMessage;
@@ -40,7 +47,7 @@ public final class AutoFocusCallback implements Camera.AutoFocusCallback {
     public void onAutoFocus(boolean success, Camera camera) {
         if (autoFocusHandler != null) {
             Message message = autoFocusHandler.obtainMessage(autoFocusMessage, success);
-            autoFocusHandler.sendMessageDelayed(message, AUTOFOCUS_INTERVAL_MS);
+            autoFocusHandler.sendMessageDelayed(message, XQRCode.getAutoFocusInterval());
             autoFocusHandler = null;
         } else {
             QCLog.dTag(TAG, "Got auto-focus callback, but no handler for it");

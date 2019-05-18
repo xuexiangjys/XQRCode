@@ -91,15 +91,15 @@ public final class ViewfinderView extends View {
         CameraManager.FRAME_HEIGHT = ta.getDimensionPixelSize(R.styleable.ViewfinderView_inner_height, getDefaultScanSize(getContext()));
 
         // 扫描框边角颜色
-        innercornercolor = ta.getColor(R.styleable.ViewfinderView_inner_corner_color, resources.getColor(R.color.default_inner_corner_color));
+        cornerColor = ta.getColor(R.styleable.ViewfinderView_inner_corner_color, resources.getColor(R.color.default_inner_corner_color));
         // 扫描框边角长度
-        innercornerlength = ta.getDimensionPixelSize(R.styleable.ViewfinderView_inner_corner_length, resources.getDimensionPixelSize(R.dimen.default_inner_corner_length));
+        cornerLength = ta.getDimensionPixelSize(R.styleable.ViewfinderView_inner_corner_length, resources.getDimensionPixelSize(R.dimen.default_inner_corner_length));
         // 扫描框边角宽度
-        innercornerwidth = ta.getDimensionPixelSize(R.styleable.ViewfinderView_inner_corner_width, resources.getDimensionPixelSize(R.dimen.default_inner_corner_width));
+        cornerWidth = ta.getDimensionPixelSize(R.styleable.ViewfinderView_inner_corner_width, resources.getDimensionPixelSize(R.dimen.default_inner_corner_width));
         // 扫描控件
         scanLight = BitmapFactory.decodeResource(getResources(), ta.getResourceId(R.styleable.ViewfinderView_inner_scan_bitmap, R.drawable.xqrcode_ic_scan_light));
         // 扫描速度
-        scanVelocity = ta.getInt(R.styleable.ViewfinderView_inner_scan_speed, 5);
+        scanVelocity = ta.getDimensionPixelSize(R.styleable.ViewfinderView_inner_scan_speed, resources.getDimensionPixelSize(R.dimen.default_inner_scan_speed));
         isCircle = ta.getBoolean(R.styleable.ViewfinderView_inner_scan_isCircle, true);
 
         mMaskColor = ta.getColor(R.styleable.ViewfinderView_inner_mask_color, resources.getColor(R.color.default_mask_color));
@@ -110,6 +110,7 @@ public final class ViewfinderView extends View {
 
     @Override
     public void onDraw(Canvas canvas) {
+        //扫描的区域
         Rect frame = CameraManager.get().getFramingRect();
         if (frame == null) {
             return;
@@ -120,9 +121,9 @@ public final class ViewfinderView extends View {
         // Draw the exterior (i.e. outside the framing rect) darkened
         mPaint.setColor(mResultBitmap != null ? mResultColor : mMaskColor);
         canvas.drawRect(0, 0, width, frame.top, mPaint);
-        canvas.drawRect(0, frame.top, frame.left, frame.bottom + 1, mPaint);
-        canvas.drawRect(frame.right + 1, frame.top, width, frame.bottom + 1, mPaint);
-        canvas.drawRect(0, frame.bottom + 1, width, height, mPaint);
+        canvas.drawRect(0, frame.top, frame.left, frame.bottom, mPaint);
+        canvas.drawRect(frame.right, frame.top, width, frame.bottom, mPaint);
+        canvas.drawRect(0, frame.bottom, width, height, mPaint);
 
         if (mResultBitmap != null) {
             // Draw the opaque result bitmap over the scanning rectangle
@@ -163,13 +164,21 @@ public final class ViewfinderView extends View {
         }
     }
 
-    // 扫描线移动的y
+    /**
+     * 扫描线移动的y
+     */
     private int scanLineTop;
-    // 扫描线移动速度
+    /**
+     * 扫描线移动速度
+     */
     private int scanVelocity;
-    // 扫描线
+    /**
+     * 扫描线
+     */
     private Bitmap scanLight;
-    // 是否展示小圆点
+    /**
+     * 是否展示小圆点
+     */
     private boolean isCircle;
 
     /**
@@ -179,7 +188,6 @@ public final class ViewfinderView extends View {
      * @param frame
      */
     private void drawScanLight(Canvas canvas, Rect frame) {
-
         if (scanLineTop == 0) {
             scanLineTop = frame.top;
         }
@@ -189,18 +197,23 @@ public final class ViewfinderView extends View {
         } else {
             scanLineTop += scanVelocity;
         }
-        Rect scanRect = new Rect(frame.left, scanLineTop, frame.right,
-                scanLineTop + 30);
+        Rect scanRect = new Rect(frame.left, scanLineTop, frame.right, scanLineTop + 30);
         canvas.drawBitmap(scanLight, null, scanRect, mPaint);
     }
 
 
-    // 扫描框边角颜色
-    private int innercornercolor;
-    // 扫描框边角长度
-    private int innercornerlength;
-    // 扫描框边角宽度
-    private int innercornerwidth;
+    /**
+     * 扫描框边角颜色
+     */
+    private int cornerColor;
+    /**
+     * 扫描框边角长度
+     */
+    private int cornerLength;
+    /**
+     * 扫描框边角宽度
+     */
+    private int cornerWidth;
 
     /**
      * 绘制取景框边框
@@ -209,33 +222,23 @@ public final class ViewfinderView extends View {
      * @param frame
      */
     private void drawFrameBounds(Canvas canvas, Rect frame) {
-
-        mPaint.setColor(innercornercolor);
+        mPaint.setColor(cornerColor);
         mPaint.setStyle(Paint.Style.FILL);
-
-        int corWidth = innercornerwidth;
-        int corLength = innercornerlength;
+        int corWidth = cornerWidth;
+        int corLength = cornerLength;
 
         // 左上角
-        canvas.drawRect(frame.left, frame.top, frame.left + corWidth, frame.top
-                + corLength, mPaint);
-        canvas.drawRect(frame.left, frame.top, frame.left
-                + corLength, frame.top + corWidth, mPaint);
+        canvas.drawRect(frame.left, frame.top, frame.left + corWidth, frame.top + corLength, mPaint);
+        canvas.drawRect(frame.left, frame.top, frame.left + corLength, frame.top + corWidth, mPaint);
         // 右上角
-        canvas.drawRect(frame.right - corWidth, frame.top, frame.right,
-                frame.top + corLength, mPaint);
-        canvas.drawRect(frame.right - corLength, frame.top,
-                frame.right, frame.top + corWidth, mPaint);
+        canvas.drawRect(frame.right - corWidth, frame.top, frame.right, frame.top + corLength, mPaint);
+        canvas.drawRect(frame.right - corLength, frame.top, frame.right, frame.top + corWidth, mPaint);
         // 左下角
-        canvas.drawRect(frame.left, frame.bottom - corLength,
-                frame.left + corWidth, frame.bottom, mPaint);
-        canvas.drawRect(frame.left, frame.bottom - corWidth, frame.left
-                + corLength, frame.bottom, mPaint);
+        canvas.drawRect(frame.left, frame.bottom - corLength, frame.left + corWidth, frame.bottom, mPaint);
+        canvas.drawRect(frame.left, frame.bottom - corWidth, frame.left + corLength, frame.bottom, mPaint);
         // 右下角
-        canvas.drawRect(frame.right - corWidth, frame.bottom - corLength,
-                frame.right, frame.bottom, mPaint);
-        canvas.drawRect(frame.right - corLength, frame.bottom - corWidth,
-                frame.right, frame.bottom, mPaint);
+        canvas.drawRect(frame.right - corWidth, frame.bottom - corLength, frame.right, frame.bottom, mPaint);
+        canvas.drawRect(frame.right - corLength, frame.bottom - corWidth, frame.right, frame.bottom, mPaint);
     }
 
 

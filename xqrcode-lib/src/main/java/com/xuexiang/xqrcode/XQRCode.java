@@ -24,6 +24,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
 import com.google.zxing.Result;
+import com.xuexiang.xqrcode.camera.AutoFocusCallback;
 import com.xuexiang.xqrcode.camera.CameraManager;
 import com.xuexiang.xqrcode.logs.QCLog;
 import com.xuexiang.xqrcode.ui.CaptureActivity;
@@ -35,11 +36,10 @@ import com.xuexiang.xqrcode.util.QRCodeProduceUtils.Builder;
 import static com.xuexiang.xqrcode.util.QRCodeProduceUtils.QRCODE_BITMAP_MAX_SIZE;
 
 /**
- * <pre>
- *     desc   : 二维码 XQRCode API
- *     author : xuexiang
- *     time   : 2018/5/4 上午12:33
- * </pre>
+ * 二维码 XQRCode API
+ *
+ * @author xuexiang
+ * @since 2019-05-18 17:39
  */
 public class XQRCode {
 
@@ -81,6 +81,11 @@ public class XQRCode {
     public static final String ACTION_DEFAULT_CAPTURE = "com.xuexiang.xqrcode.ui.captureactivity";
 
     /**
+     * 自动聚焦的间期
+     */
+    public static long sAutoFocusInterval = AutoFocusCallback.AUTO_FOCUS_INTERVAL_MS;
+
+    /**
      * 设置是否打开调试
      *
      * @param isDebug
@@ -96,6 +101,19 @@ public class XQRCode {
      */
     public static void debug(String tag) {
         QCLog.debug(tag);
+    }
+
+    /**
+     * 设置自动聚焦的间期【默认是1500ms】
+     *
+     * @param sAutoFocusInterval
+     */
+    public static void setAutoFocusInterval(long sAutoFocusInterval) {
+        XQRCode.sAutoFocusInterval = sAutoFocusInterval;
+    }
+
+    public static long getAutoFocusInterval() {
+        return sAutoFocusInterval;
     }
 
     //==================================调用默认二维码扫描=================================//

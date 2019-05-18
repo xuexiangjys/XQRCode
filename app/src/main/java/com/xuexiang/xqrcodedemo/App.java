@@ -26,6 +26,7 @@ import com.xuexiang.xpage.AppPageConfig;
 import com.xuexiang.xpage.PageConfig;
 import com.xuexiang.xpage.PageConfiguration;
 import com.xuexiang.xpage.model.PageInfo;
+import com.xuexiang.xqrcode.XQRCode;
 import com.xuexiang.xutil.XUtil;
 import com.xuexiang.xutil.common.StringUtils;
 import com.xuexiang.xutil.tip.ToastUtils;
@@ -73,6 +74,8 @@ public class App extends Application {
 
     @Permission(CAMERA)
     private void initPermission() {
+        //设置相机的自动聚焦间隔
+        XQRCode.setAutoFocusInterval(1500L);
         ToastUtils.toast("相机权限已获取！");
     }
 }

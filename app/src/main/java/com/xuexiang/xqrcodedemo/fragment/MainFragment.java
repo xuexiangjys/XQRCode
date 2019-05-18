@@ -49,7 +49,7 @@ import static com.xuexiang.xqrcode.XQRCode.KEY_IS_REPEATED;
 import static com.xuexiang.xqrcode.XQRCode.KEY_SCAN_INTERVAL;
 
 /**
- *  二维码扫描
+ * 二维码扫描
  *
  * @author xuexiang
  * @since 2019/1/16 下午11:56
@@ -78,6 +78,7 @@ public class MainFragment extends XPageSimpleListFragment {
     @Override
     protected List<String> initSimpleData(List<String> lists) {
         lists.add("默认扫描界面");
+        lists.add("默认扫描界面(自定义主题)");
         lists.add("定制化扫描界面(单次）");
         lists.add("定制化扫描界面(多次）");
         lists.add("远程扫描界面");
@@ -98,18 +99,21 @@ public class MainFragment extends XPageSimpleListFragment {
                 startScan(ScanType.DEFAULT);
                 break;
             case 1:
-                startScan(ScanType.CUSTOM_SINGLE);
+                startScan(ScanType.DEFAULT_Custom);
                 break;
             case 2:
-                startScan(ScanType.CUSTOM_MULTIPLE);
+                startScan(ScanType.CUSTOM_SINGLE);
                 break;
             case 3:
-                startScan(ScanType.REMOTE);
+                startScan(ScanType.CUSTOM_MULTIPLE);
                 break;
             case 4:
-                openPage(QRCodeProduceFragment.class);
+                startScan(ScanType.REMOTE);
                 break;
             case 5:
+                openPage(QRCodeProduceFragment.class);
+                break;
+            case 6:
                 selectQRCode();
                 break;
             default:
@@ -126,17 +130,19 @@ public class MainFragment extends XPageSimpleListFragment {
      * 开启二维码扫描
      */
     @Permission(CAMERA)
-    @IOThread(ThreadType.Single)
     private void startScan(ScanType scanType) {
         switch (scanType) {
+            case DEFAULT:
+                XQRCode.startScan(this, REQUEST_CODE);
+                break;
+            case DEFAULT_Custom:
+                XQRCode.startScan(this, REQUEST_CODE, R.style.XQRCodeTheme_Custom);
+                break;
             case CUSTOM_SINGLE:
                 openPageForResult(CustomCaptureFragment.class, getScanParam(false, 0), REQUEST_CUSTOM_SCAN);
                 break;
             case CUSTOM_MULTIPLE:
                 openPage(CustomCaptureFragment.class, getScanParam(true, 1000));
-                break;
-            case DEFAULT:
-                XQRCode.startScan(this, REQUEST_CODE, R.style.XQRCodeTheme_Custom);
                 break;
             case REMOTE:
                 Intent intent = new Intent(XQRCode.ACTION_DEFAULT_CAPTURE);
@@ -187,6 +193,11 @@ public class MainFragment extends XPageSimpleListFragment {
         }
     }
 
+    /**
+     * 进行二维码解析
+     *
+     * @param uri
+     */
     @SuppressLint("MissingPermission")
     private void getAnalyzeQRCodeResult(Uri uri) {
         XQRCode.analyzeQRCode(PathUtils.getFilePathByUri(getContext(), uri), new QRCodeAnalyzeUtils.AnalyzeCallback() {
@@ -252,6 +263,10 @@ public class MainFragment extends XPageSimpleListFragment {
          * 默认
          */
         DEFAULT,
+        /**
+         * 默认(修改主题）
+         */
+        DEFAULT_Custom,
         /**
          * 远程
          */

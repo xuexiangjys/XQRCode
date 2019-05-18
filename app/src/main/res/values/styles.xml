@@ -15,6 +15,10 @@
 
     <style name="ViewfinderView.Custom">
         <item name="inner_corner_color">#123456</item>
+        <item name="inner_corner_length">50dp</item>
+        <item name="inner_corner_width">5dp</item>
+        <item name="inner_scan_speed">20dp</item>
+        <item name="inner_scan_isCircle">false</item>
     </style>
 
 </resources>

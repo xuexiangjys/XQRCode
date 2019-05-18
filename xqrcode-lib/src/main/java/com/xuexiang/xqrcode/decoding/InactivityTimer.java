@@ -34,8 +34,7 @@ public final class InactivityTimer {
 
     private static final int INACTIVITY_DELAY_SECONDS = 5 * 60;
 
-    private final ScheduledExecutorService inactivityTimer =
-            Executors.newSingleThreadScheduledExecutor(new DaemonThreadFactory());
+    private final ScheduledExecutorService inactivityTimer = Executors.newSingleThreadScheduledExecutor(new DaemonThreadFactory());
     private final Activity mActivity;
     private ScheduledFuture<?> mInactivityFuture = null;
 

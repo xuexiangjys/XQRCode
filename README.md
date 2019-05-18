@@ -46,32 +46,58 @@ allprojects {
 ```
 dependencies {
   ...
-  implementation 'com.github.xuexiangjys:XQRCode:1.0.3'
+  implementation 'com.github.xuexiangjys:XQRCode:1.0.4'
 }
 ```
 
 ### 2.2、二维码扫描
 
+#### 默认二维码扫描
+
 1.默认二维码扫描界面`CaptureActivity`
 
-二维码的扫描结果通过Intent返回出来：
+使用`XQRCode.startScan`直接调取默认二维码扫描。
+
+```
+XQRCode.startScan(this, REQUEST_CODE);
+```
+
+2.二维码的扫描结果通过Intent返回出来：
 
 * `XQRCode.RESULT_TYPE`:扫描结果类型，`XQRCode.RESULT_SUCCESS`代表扫描成功，`XQRCode.RESULT_FAILED`代表扫描失败。
 * `XQRCode.RESULT_DATA`:扫描二维码的数据内容。
+
+3.自定义默认二维码扫描界面的主题样式：
+
+```
+<!-- 自定义默认二维码扫描界面的主题. -->
+<style name="XQRCodeTheme.Custom">
+    <item name="ViewfinderViewStyle">@style/ViewfinderView.Custom</item>
+</style>
+
+<style name="ViewfinderView.Custom">
+    <item name="inner_corner_color">#123456</item>
+    <item name="inner_corner_length">50dp</item>
+    <item name="inner_corner_width">5dp</item>
+    <item name="inner_scan_speed">20dp</item>
+    <item name="inner_scan_isCircle">false</item>
+</style>
+```
+
+下面的二维码扫描代码仅供参考：
 
 ```
 /**
  * 开启二维码扫描
  */
 @Permission(CAMERA)
-@IOThread(ThreadType.Single)
 private void startScan(ScanType scanType) {
-    switch(scanType) {
-        case CUSTOM:
-            openPageForResult(CustomCaptureFragment.class, null, REQUEST_CUSTOM_SCAN);
-            break;
+    switch (scanType) {
         case DEFAULT:
-            startActivityForResult(new Intent(getActivity(), CaptureActivity.class), REQUEST_CODE);
+            XQRCode.startScan(this, REQUEST_CODE);
+            break;
+        case DEFAULT_Custom:
+            XQRCode.startScan(this, REQUEST_CODE, R.style.XQRCodeTheme_Custom);
             break;
         case REMOTE:
             Intent intent = new Intent(XQRCode.ACTION_DEFAULT_CAPTURE);
@@ -79,6 +105,24 @@ private void startScan(ScanType scanType) {
             break;
         default:
             break;
+    }
+}
+
+@Override
+public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    super.onActivityResult(requestCode, resultCode, data);
+    //处理二维码扫描结果
+    if (requestCode == REQUEST_CODE && resultCode == RESULT_OK) {
+        //处理扫描结果（在界面上显示）
+        handleScanResult(data);
+    }
+
+    //选择系统图片并解析
+    else if (requestCode == REQUEST_IMAGE) {
+        if (data != null) {
+            Uri uri = data.getData();
+            getAnalyzeQRCodeResult(uri);
+        }
     }
 }
 
@@ -99,11 +143,30 @@ private void handleScanResult(Intent data) {
         }
     }
 }
+
+/**
+ * 进行二维码解析
+ *
+ * @param uri
+ */
+private void getAnalyzeQRCodeResult(Uri uri) {
+    XQRCode.analyzeQRCode(PathUtils.getFilePathByUri(getContext(), uri), new QRCodeAnalyzeUtils.AnalyzeCallback() {
+        @Override
+        public void onAnalyzeSuccess(Bitmap mBitmap, String result) {
+            ToastUtils.toast("解析结果:" + result, Toast.LENGTH_LONG);
+        }
+
+        @Override
+        public void onAnalyzeFailed() {
+            ToastUtils.toast("解析二维码失败", Toast.LENGTH_LONG);
+        }
+    });
+}
 ```
 
-2.自定义二维码扫描界面
+#### 自定义二维码扫描
 
-（1）自定义一个扫码界面布局。自定义的扫码界面需要定义一个`SurfaceView`和一个`ViewfinderView`，且id必须是`preview_view`和`viewfinder_view`。详情见如下布局代码：
+1. 自定义一个扫码界面布局。自定义的扫码界面需要定义一个`SurfaceView`和一个`ViewfinderView`，且id必须是`preview_view`和`viewfinder_view`。详情见如下布局代码：
 
 ```
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -126,7 +189,7 @@ private void handleScanResult(Intent data) {
         app:inner_marginTop="120dp"
         app:inner_scan_bitmap="@mipmap/ic_scan_image"
         app:inner_scan_isCircle="false"
-        app:inner_scan_speed="10"
+        app:inner_scan_speed="10dp"
         app:inner_height="300dp"
         app:inner_width="300dp" />
 
@@ -140,15 +203,15 @@ ViewfinderView属性表
 inner_width | dimension | 屏幕宽度的3／4 | 扫描框的宽度
 inner_height | dimension | 屏幕宽度的3／4 | 扫描框的高度
 inner_marginTop | dimension | 居中效果 | 扫描框距离顶部的距离
-inner_corner_color | color | #45DDDD | 扫描框四角的颜色
-inner_corner_length | dimension | 65px | 扫描框四角的长度
-inner_corner_width | dimension | 15px | 扫描框四角的宽度
+inner_corner_color | color | #0DC2FE | 扫描框四角的颜色
+inner_corner_length | dimension | 32dp | 扫描框四角的长度
+inner_corner_width | dimension | 6dp | 扫描框四角的宽度
 inner_scan_bitmap | reference | R.drawable.xqrcode_ic_scan_light | 扫描控件图资源
-inner_scan_speed | integer | 5px | 扫描速度
+inner_scan_speed | dimension | 5dp | 扫描速度
 inner_scan_isCircle | boolean | true | 小圆点是否展示
 
 
-（2）调用`XQRCode.getCaptureFragment`的方法，传入自定义扫描界面的布局ID，可以获得带扫描功能的Fragment-`CaptureFragment`，将其填充到页面中。
+2. 调用`XQRCode.getCaptureFragment`的方法，传入自定义扫描界面的布局ID，可以获得带扫描功能的Fragment-`CaptureFragment`，将其填充到页面中。
 
 ```
 // 为二维码扫描界面设置定制化界面
@@ -157,7 +220,14 @@ captureFragment.setAnalyzeCallback(analyzeCallback);
 getChildFragmentManager().beginTransaction().replace(R.id.fl_my_container, captureFragment).commit();
 ```
 
-（3）最后为CaptureFragment设置二维码解析回调接口`AnalyzeCallback`即可。
+3. 最后为CaptureFragment设置二维码解析回调接口`AnalyzeCallback`即可。
+
+#### 设置相机聚焦的间隔
+
+```
+//设置相机的自动聚焦间隔
+XQRCode.setAutoFocusInterval(1500L);
+```
 
 ### 2.3、二维码生成
 
@@ -205,7 +275,7 @@ https://github.com/yipianfengye/android-zxingLibrary
 
 ![](https://github.com/xuexiangjys/XPage/blob/master/img/qq_group.jpg)
 
-[xqsvg]: https://img.shields.io/badge/XQRCode-v1.0.3-brightgreen.svg
+[xqsvg]: https://img.shields.io/badge/XQRCode-v1.0.4-brightgreen.svg
 [xq]: https://github.com/xuexiangjys/XQRCode
 [apisvg]: https://img.shields.io/badge/API-14+-brightgreen.svg
 [api]: https://android-arsenal.com/api?level=14
