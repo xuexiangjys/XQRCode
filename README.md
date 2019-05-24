@@ -17,13 +17,13 @@
 * 支持二维码解析功能
 
 ## 1、演示（请star支持）
-![](https://github.com/xuexiangjys/XQRCode/blob/master/img/xqrcode.gif)
+![](./img/xqrcode.gif)
 
 ### Demo下载
 
 [![downloads](https://img.shields.io/badge/downloads-1.7M-blue.svg)](https://github.com/xuexiangjys/XQRCode/blob/master/apk/xqrcodedemo.apk?raw=true)
 
-![](https://github.com/xuexiangjys/XQRCode/blob/master/img/download.png)
+![](./img/download.png)
 
 
 ## 2、如何使用
