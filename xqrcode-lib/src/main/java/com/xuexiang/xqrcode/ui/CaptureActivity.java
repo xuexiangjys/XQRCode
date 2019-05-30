@@ -77,7 +77,8 @@ public class CaptureActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         setTheme(getIntent().getIntExtra(KEY_CAPTURE_THEME, R.style.XQRCodeTheme));
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.xqrcode_activity_capture);
+        setContentView(getCaptureLayoutId());
+        beforeCapture();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
                 requestPermissions(new String[]{Manifest.permission.CAMERA}, REQUEST_CODE_REQUEST_PERMISSIONS);
@@ -87,7 +88,21 @@ public class CaptureActivity extends AppCompatActivity {
         initCaptureFragment();
     }
 
-    private void initCaptureFragment() {
+    protected int getCaptureLayoutId() {
+        return R.layout.xqrcode_activity_capture;
+    }
+
+    /**
+     * 做二维码采集之前需要做的事情
+     */
+    protected void beforeCapture() {
+
+    }
+
+    /**
+     * 初始化采集
+     */
+    protected void initCaptureFragment() {
         CaptureFragment captureFragment = new CaptureFragment();
         captureFragment.setAnalyzeCallback(analyzeCallback);
         captureFragment.setCameraInitCallBack(cameraInitCallBack);
@@ -141,27 +156,44 @@ public class CaptureActivity extends AppCompatActivity {
      */
     QRCodeAnalyzeUtils.AnalyzeCallback analyzeCallback = new QRCodeAnalyzeUtils.AnalyzeCallback() {
         @Override
-        public void onAnalyzeSuccess(Bitmap mBitmap, String result) {
-            Intent resultIntent = new Intent();
-            Bundle bundle = new Bundle();
-            bundle.putInt(XQRCode.RESULT_TYPE, XQRCode.RESULT_SUCCESS);
-            bundle.putString(XQRCode.RESULT_DATA, result);
-            resultIntent.putExtras(bundle);
-            setResult(RESULT_OK, resultIntent);
-            finish();
+        public void onAnalyzeSuccess(Bitmap bitmap, String result) {
+            handleAnalyzeSuccess(bitmap, result);
         }
 
         @Override
         public void onAnalyzeFailed() {
-            Intent resultIntent = new Intent();
-            Bundle bundle = new Bundle();
-            bundle.putInt(XQRCode.RESULT_TYPE, XQRCode.RESULT_FAILED);
-            bundle.putString(XQRCode.RESULT_DATA, "");
-            resultIntent.putExtras(bundle);
-            setResult(RESULT_OK, resultIntent);
-            finish();
+            handleAnalyzeFailed();
         }
     };
+
+    /**
+     * 处理扫描成功
+     *
+     * @param bitmap
+     * @param result
+     */
+    protected void handleAnalyzeSuccess(Bitmap bitmap, String result) {
+        Intent resultIntent = new Intent();
+        Bundle bundle = new Bundle();
+        bundle.putInt(XQRCode.RESULT_TYPE, XQRCode.RESULT_SUCCESS);
+        bundle.putString(XQRCode.RESULT_DATA, result);
+        resultIntent.putExtras(bundle);
+        setResult(RESULT_OK, resultIntent);
+        finish();
+    }
+
+    /**
+     * 处理解析失败
+     */
+    protected void handleAnalyzeFailed() {
+        Intent resultIntent = new Intent();
+        Bundle bundle = new Bundle();
+        bundle.putInt(XQRCode.RESULT_TYPE, XQRCode.RESULT_FAILED);
+        bundle.putString(XQRCode.RESULT_DATA, "");
+        resultIntent.putExtras(bundle);
+        setResult(RESULT_OK, resultIntent);
+        finish();
+    }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -170,8 +202,17 @@ public class CaptureActivity extends AppCompatActivity {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 initCaptureFragment();
             } else {
-                CaptureActivity.showNoPermissionTip(CaptureActivity.this);
+                handleRequestPermissionDeny();
             }
         }
     }
+
+    /**
+     * 处理权限申请拒绝
+     */
+    protected void handleRequestPermissionDeny() {
+        CaptureActivity.showNoPermissionTip(CaptureActivity.this);
+    }
+
+
 }

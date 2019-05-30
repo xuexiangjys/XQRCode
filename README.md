@@ -46,7 +46,7 @@ allprojects {
 ```
 dependencies {
   ...
-  implementation 'com.github.xuexiangjys:XQRCode:1.0.4'
+  implementation 'com.github.xuexiangjys:XQRCode:1.0.5'
 }
 ```
 
@@ -207,7 +207,9 @@ inner_corner_color | color | #0DC2FE | 扫描框四角的颜色
 inner_corner_length | dimension | 32dp | 扫描框四角的长度
 inner_corner_width | dimension | 6dp | 扫描框四角的宽度
 inner_scan_bitmap | reference | R.drawable.xqrcode_ic_scan_light | 扫描控件图资源
+inner_scan_bitmap_tint | color | / | 扫描控件图资源的色调
 inner_scan_speed | dimension | 5dp | 扫描速度
+inner_scan_animation_interval | integer | 25 | 扫描动画绘制的间期，单位是ms
 inner_scan_isCircle | boolean | true | 小圆点是否展示
 
 
@@ -275,7 +277,7 @@ https://github.com/yipianfengye/android-zxingLibrary
 
 ![](https://github.com/xuexiangjys/XPage/blob/master/img/qq_group.jpg)
 
-[xqsvg]: https://img.shields.io/badge/XQRCode-v1.0.4-brightgreen.svg
+[xqsvg]: https://img.shields.io/badge/XQRCode-v1.0.5-brightgreen.svg
 [xq]: https://github.com/xuexiangjys/XQRCode
 [apisvg]: https://img.shields.io/badge/API-14+-brightgreen.svg
 [api]: https://android-arsenal.com/api?level=14

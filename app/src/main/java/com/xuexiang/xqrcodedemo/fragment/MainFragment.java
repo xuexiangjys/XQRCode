@@ -25,16 +25,14 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Toast;
 
-import com.xuexiang.xaop.annotation.IOThread;
 import com.xuexiang.xaop.annotation.Permission;
-import com.xuexiang.xaop.enums.ThreadType;
 import com.xuexiang.xpage.annotation.Page;
 import com.xuexiang.xpage.base.XPageSimpleListFragment;
 import com.xuexiang.xpage.utils.TitleBar;
 import com.xuexiang.xqrcode.XQRCode;
-import com.xuexiang.xqrcode.ui.CaptureActivity;
 import com.xuexiang.xqrcode.util.QRCodeAnalyzeUtils;
 import com.xuexiang.xqrcodedemo.R;
+import com.xuexiang.xqrcodedemo.activity.CustomCaptureActivity;
 import com.xuexiang.xqrcodedemo.util.PathUtils;
 import com.xuexiang.xutil.app.IntentUtils;
 import com.xuexiang.xutil.common.ClickUtils;
@@ -136,7 +134,7 @@ public class MainFragment extends XPageSimpleListFragment {
                 XQRCode.startScan(this, REQUEST_CODE);
                 break;
             case DEFAULT_Custom:
-                XQRCode.startScan(this, REQUEST_CODE, R.style.XQRCodeTheme_Custom);
+                CustomCaptureActivity.start(this, REQUEST_CODE, R.style.XQRCodeTheme_Custom);
                 break;
             case CUSTOM_SINGLE:
                 openPageForResult(CustomCaptureFragment.class, getScanParam(false, 0), REQUEST_CUSTOM_SCAN);

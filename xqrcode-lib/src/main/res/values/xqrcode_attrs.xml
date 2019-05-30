@@ -16,8 +16,12 @@
         <attr name="inner_corner_width" format="dimension" />
         <!-- 扫描控件图资源，默认为R.drawable.xqrcode_ic_scan_light-->
         <attr name="inner_scan_bitmap" format="reference" />
+        <!-- 扫描控件图资源的色调，默认是-1-->
+        <attr name="inner_scan_bitmap_tint" format="color" />
         <!-- 扫描速度，默认为5dp-->
         <attr name="inner_scan_speed" format="dimension" />
+        <!-- 扫描动画绘制的间期，单位是ms， 默认是25ms-->
+        <attr name="inner_scan_animation_interval" format="integer" />
         <!-- 小圆点是否展示，默认为true-->
         <attr name="inner_scan_isCircle" format="boolean" />
         <attr name="inner_result_color" format="color" />

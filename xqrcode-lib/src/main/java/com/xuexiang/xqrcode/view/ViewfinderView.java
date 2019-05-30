@@ -23,6 +23,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.PorterDuff;
 import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.view.View;
@@ -42,7 +43,7 @@ import java.util.HashSet;
  */
 public final class ViewfinderView extends View {
 
-    private static final long ANIMATION_DELAY = 100L;
+    private static final int DEFAULT_ANIMATION_INTERVAL = 25;
     private static final int OPAQUE = 0xFF;
 
     private final Paint mPaint;
@@ -98,8 +99,20 @@ public final class ViewfinderView extends View {
         cornerWidth = ta.getDimensionPixelSize(R.styleable.ViewfinderView_inner_corner_width, resources.getDimensionPixelSize(R.dimen.default_inner_corner_width));
         // 扫描控件
         scanLight = BitmapFactory.decodeResource(getResources(), ta.getResourceId(R.styleable.ViewfinderView_inner_scan_bitmap, R.drawable.xqrcode_ic_scan_light));
+        int tintColor = ta.getColor(R.styleable.ViewfinderView_inner_scan_bitmap_tint, -1);
+        if (tintColor != -1) {
+            //改变颜色
+            Bitmap tmp = scanLight.copy(Bitmap.Config.ARGB_8888, true);
+            scanLight.recycle();
+            Canvas canvas = new Canvas(tmp);
+            canvas.drawColor(tintColor, PorterDuff.Mode.SRC_IN);
+            scanLight = tmp;
+        }
+
         // 扫描速度
         scanVelocity = ta.getDimensionPixelSize(R.styleable.ViewfinderView_inner_scan_speed, resources.getDimensionPixelSize(R.dimen.default_inner_scan_speed));
+        // 扫描动画间隔
+        scanAnimationInterval = ta.getInt(R.styleable.ViewfinderView_inner_scan_animation_interval, DEFAULT_ANIMATION_INTERVAL);
         isCircle = ta.getBoolean(R.styleable.ViewfinderView_inner_scan_isCircle, true);
 
         mMaskColor = ta.getColor(R.styleable.ViewfinderView_inner_mask_color, resources.getColor(R.color.default_mask_color));
@@ -160,7 +173,7 @@ public final class ViewfinderView extends View {
                     }
                 }
             }
-            postInvalidateDelayed(ANIMATION_DELAY, frame.left, frame.top, frame.right, frame.bottom);
+            postInvalidateDelayed(scanAnimationInterval, frame.left, frame.top, frame.right, frame.bottom);
         }
     }
 
@@ -176,6 +189,10 @@ public final class ViewfinderView extends View {
      * 扫描线
      */
     private Bitmap scanLight;
+    /**
+     * 扫描动画间隔
+     */
+    private long scanAnimationInterval;
     /**
      * 是否展示小圆点
      */

@@ -14,11 +14,11 @@
     </style>
 
     <style name="ViewfinderView.Custom">
-        <item name="inner_corner_color">#123456</item>
-        <item name="inner_corner_length">50dp</item>
-        <item name="inner_corner_width">5dp</item>
-        <item name="inner_scan_speed">20dp</item>
-        <item name="inner_scan_isCircle">false</item>
+        <item name="inner_corner_color">#FF9900</item>
+        <!--<item name="inner_scan_bitmap">@drawable/ic_qrcode_scanning</item>-->
+        <item name="inner_corner_width">6dp</item>
+        <item name="inner_scan_bitmap_tint">#FF9900</item>
+        <item name="inner_scan_animation_interval">25</item>
     </style>
 
 </resources>
