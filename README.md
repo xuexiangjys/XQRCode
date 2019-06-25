@@ -1,5 +1,8 @@
 # XQRCode
-[![xq][xqsvg]][xq]  [![api][apisvg]][api]
+[![](https://jitpack.io/v/xuexiangjys/XQRCode.svg)](https://jitpack.io/#xuexiangjys/XQRCode)
+[![api][apisvg]][api]
+[![I](https://img.shields.io/github/issues/xuexiangjys/XQRCode.svg)](https://github.com/xuexiangjys/XQRCode/issues)
+[![Star](https://img.shields.io/github/stars/xuexiangjys/XQRCode.svg)](https://github.com/xuexiangjys/XQRCode)
 
 一个非常方便实用的二维码扫描、解析、生成库
 
