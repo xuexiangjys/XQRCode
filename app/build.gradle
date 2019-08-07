@@ -18,6 +18,8 @@ android {
                 arguments = [ moduleName : project.getName() ]
             }
         }
+
+        vectorDrawables.useSupportLibrary = true
     }
 
     if (isNeedPackage.toBoolean()) {

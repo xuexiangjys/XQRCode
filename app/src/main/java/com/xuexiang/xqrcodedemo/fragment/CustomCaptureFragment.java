@@ -27,6 +27,7 @@ import com.xuexiang.xpage.annotation.Page;
 import com.xuexiang.xpage.base.XPageFragment;
 import com.xuexiang.xpage.enums.CoreAnim;
 import com.xuexiang.xqrcode.XQRCode;
+import com.xuexiang.xqrcode.camera.CameraManager;
 import com.xuexiang.xqrcode.ui.CaptureActivity;
 import com.xuexiang.xqrcode.ui.CaptureFragment;
 import com.xuexiang.xqrcode.util.QRCodeAnalyzeUtils;
@@ -47,7 +48,7 @@ import static com.xuexiang.xqrcode.XQRCode.KEY_SCAN_INTERVAL;
  */
 @Page(name = "二维码扫描", anim = CoreAnim.none, params = {KEY_IS_REPEATED, KEY_SCAN_INTERVAL})
 public class CustomCaptureFragment extends XPageFragment {
-    public static boolean isOpen = false;
+    public boolean mIsOpen;
 
     private boolean mIsRepeated;
     private long mScanInterval;
@@ -89,6 +90,8 @@ public class CustomCaptureFragment extends XPageFragment {
                             popToBack();
                         }
                     });
+                } else {
+                    mIsOpen = XQRCode.isFlashLightOpen();
                 }
             }
         });
@@ -137,12 +140,19 @@ public class CustomCaptureFragment extends XPageFragment {
     @OnClick(R.id.ll_flash_light)
     @SingleClick
     void onClickFlashLight(View v) {
-        isOpen = !isOpen;
+        mIsOpen = !mIsOpen;
         try {
-            XQRCode.enableFlashLight(isOpen);
+            XQRCode.switchFlashLight(mIsOpen);
         } catch (RuntimeException e) {
             e.printStackTrace();
             ToastUtils.toast("设备不支持闪光灯!");
         }
+    }
+
+    @Override
+    public void onDestroyView() {
+        //恢复设置
+        CameraManager.FRAME_MARGIN_TOP = -1;
+        super.onDestroyView();
     }
 }

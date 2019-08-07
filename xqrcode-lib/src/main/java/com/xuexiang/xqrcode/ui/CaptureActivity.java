@@ -117,9 +117,27 @@ public class CaptureActivity extends AppCompatActivity {
         public void callBack(@Nullable Exception e) {
             if (e != null) {
                 CaptureActivity.showNoPermissionTip(CaptureActivity.this);
+                onCameraInitFailed();
+            } else {
+                //照相机初始化成功
+                onCameraInitSuccess();
             }
         }
     };
+
+    /**
+     * 相机初始化成功
+     */
+    protected void onCameraInitSuccess() {
+
+    }
+
+    /**
+     * 相机初始化失败
+     */
+    protected void onCameraInitFailed() {
+
+    }
 
     /**
      * 显示无照相机权限提示

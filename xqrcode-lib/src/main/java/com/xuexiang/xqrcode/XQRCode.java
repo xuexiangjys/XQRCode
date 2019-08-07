@@ -17,7 +17,6 @@
 package com.xuexiang.xqrcode;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.hardware.Camera;
 import android.os.Bundle;
@@ -32,6 +31,8 @@ import com.xuexiang.xqrcode.ui.CaptureFragment;
 import com.xuexiang.xqrcode.util.QRCodeAnalyzeUtils;
 import com.xuexiang.xqrcode.util.QRCodeProduceUtils;
 import com.xuexiang.xqrcode.util.QRCodeProduceUtils.Builder;
+
+import java.util.List;
 
 import static com.xuexiang.xqrcode.util.QRCodeProduceUtils.QRCODE_BITMAP_MAX_SIZE;
 
@@ -284,21 +285,72 @@ public class XQRCode {
      *
      * @param isEnable 是否开启闪光灯
      */
-    public static void enableFlashLight(boolean isEnable) throws RuntimeException {
+    public static void switchFlashLight(boolean isEnable) throws RuntimeException {
         if (isEnable) {
-            Camera camera = CameraManager.get().getCamera();
-            if (camera != null) {
-                Camera.Parameters parameter = camera.getParameters();
-                parameter.setFlashMode(Camera.Parameters.FLASH_MODE_TORCH);
-                camera.setParameters(parameter);
-            }
+            enableFlashLight();
         } else {
-            Camera camera = CameraManager.get().getCamera();
-            if (camera != null) {
-                Camera.Parameters parameter = camera.getParameters();
+            disableFlashLight();
+        }
+    }
+
+    /**
+     * 关闭闪光灯
+     */
+    public static void disableFlashLight() {
+        Camera camera = CameraManager.get().getCamera();
+        if (camera != null) {
+            Camera.Parameters parameter = camera.getParameters();
+            if (parameter != null) {
                 parameter.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
                 camera.setParameters(parameter);
             }
         }
+    }
+
+    /**
+     * 开启闪光灯
+     */
+    public static void enableFlashLight() {
+        Camera camera = CameraManager.get().getCamera();
+        if (camera != null) {
+            Camera.Parameters parameter = camera.getParameters();
+            if (parameter != null) {
+                List<String> supportedFlashModes = parameter.getSupportedFlashModes();
+                if (supportedFlashModes != null) {
+                    if (supportedFlashModes.contains(Camera.Parameters.FLASH_MODE_TORCH)) {
+                        parameter.setFlashMode(Camera.Parameters.FLASH_MODE_TORCH);
+                    } else if (supportedFlashModes.contains(Camera.Parameters.FLASH_MODE_ON)) {
+                        parameter.setFlashMode(Camera.Parameters.FLASH_MODE_ON);
+                    }
+                    camera.setParameters(parameter);
+                }
+            }
+        }
+    }
+
+    /**
+     * @return 闪光灯是否打开
+     */
+    public static boolean isFlashLightOpen() {
+        String mode = getFlashMode();
+        if (mode != null && mode.length() > 0) {
+            return mode.equals(Camera.Parameters.FLASH_MODE_TORCH)
+                    || mode.equals(Camera.Parameters.FLASH_MODE_ON);
+        }
+        return false;
+    }
+
+    /**
+     * 获取闪光灯的模式
+     *
+     * @return
+     */
+    private static String getFlashMode() {
+        Camera camera = CameraManager.get().getCamera();
+        if (camera != null) {
+            Camera.Parameters parameter = camera.getParameters();
+            return parameter.getFlashMode();
+        }
+        return null;
     }
 }

@@ -16,6 +16,8 @@
 
 package com.xuexiang.xqrcode.camera;
 
+import android.content.Context;
+import android.content.pm.PackageManager;
 import android.os.IBinder;
 
 import com.xuexiang.xqrcode.logs.QCLog;
@@ -142,4 +144,10 @@ final class FlashlightManager {
         }
     }
 
+    /**
+     * @return 判断是否支持闪光灯
+     */
+    public static boolean isSupportFlashlight(Context context) {
+        return context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_FLASH);
+    }
 }
