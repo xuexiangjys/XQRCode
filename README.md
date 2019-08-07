@@ -49,7 +49,7 @@ allprojects {
 ```
 dependencies {
   ...
-  implementation 'com.github.xuexiangjys:XQRCode:1.0.5'
+  implementation 'com.github.xuexiangjys:XQRCode:1.0.6'
 }
 ```
 
@@ -86,6 +86,28 @@ XQRCode.startScan(this, REQUEST_CODE);
     <item name="inner_scan_isCircle">false</item>
 </style>
 ```
+
+4.自定义默认二维码扫描界面的界面样式，重写相关方法：
+
+详细内容可参见[CustomCaptureActivity](https://github.com/xuexiangjys/XQRCode/blob/master/app/src/main/java/com/xuexiang/xqrcodedemo/activity/CustomCaptureActivity.java)
+
+```
+@Override
+protected void beforeCapture() {
+//做二维码采集之前需要做的事情
+}
+
+@Override
+protected void onCameraInitSuccess() {
+//相机初始化成功
+}
+
+@Override
+protected void onCameraInitFailed() {
+//相机初始化失败
+}
+```
+
 
 下面的二维码扫描代码仅供参考：
 
@@ -280,7 +302,5 @@ https://github.com/yipianfengye/android-zxingLibrary
 
 ![](https://github.com/xuexiangjys/XPage/blob/master/img/qq_group.jpg)
 
-[xqsvg]: https://img.shields.io/badge/XQRCode-v1.0.5-brightgreen.svg
-[xq]: https://github.com/xuexiangjys/XQRCode
 [apisvg]: https://img.shields.io/badge/API-14+-brightgreen.svg
 [api]: https://android-arsenal.com/api?level=14
