@@ -89,13 +89,14 @@ public class PathUtils {
         if (context == null || uri == null) return null;
 
         String path = null;
+        String scheme = uri.getScheme();
         // 以 file:// 开头的
-        if (ContentResolver.SCHEME_FILE.equals(uri.getScheme())) {
+        if (ContentResolver.SCHEME_FILE.equals(scheme)) {
             path = uri.getPath();
             return path;
         }
         // 以 content:// 开头的，比如 content://media/extenral/images/media/17766
-        if (ContentResolver.SCHEME_CONTENT.equals(uri.getScheme()) && Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
+        if (ContentResolver.SCHEME_CONTENT.equals(scheme) && Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
             Cursor cursor = context.getContentResolver().query(uri, new String[]{MediaStore.Images.Media.DATA}, null, null, null);
             if (cursor != null) {
                 if (cursor.moveToFirst()) {
@@ -108,8 +109,9 @@ public class PathUtils {
             }
             return path;
         }
+
         // 4.4及之后的 是以 content:// 开头的，比如 content://com.android.providers.media.documents/document/image%3A235700
-        if (ContentResolver.SCHEME_CONTENT.equals(uri.getScheme()) && Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT && DocumentsContract.isDocumentUri(context, uri)) {
+        if (ContentResolver.SCHEME_CONTENT.equals(scheme) && Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT && DocumentsContract.isDocumentUri(context, uri)) {
             if (isExternalStorageDocument(uri)) {
                 String docId = DocumentsContract.getDocumentId(uri);
                 String[] split = docId.split(":");
@@ -138,14 +140,21 @@ public class PathUtils {
                 return getDataColumn(context, contentUri, selection, selectionArgs);
             }
         } // MediaStore (and general)
-        else if ("content".equalsIgnoreCase(uri.getScheme())) {
+        else if ("content".equalsIgnoreCase(scheme)) {
             // Return the remote address
-            if (isGooglePhotosUri(uri))
+            if (isGooglePhotosUri(uri)) {
                 return uri.getLastPathSegment();
+            } else if (isHuaWeiUri(uri)) {
+                String uriPath = uri.getPath();
+                //content://com.huawei.hidisk.fileprovider/root/storage/emulated/0/Android/data/com.xxx.xxx/
+                if (uriPath != null && uriPath.startsWith("/root")) {
+                    return uriPath.replaceAll("/root", "");
+                }
+            }
             return getDataColumn(context, uri, null, null);
         }
         // File
-        else if ("file".equalsIgnoreCase(uri.getScheme())) {
+        else if ("file".equalsIgnoreCase(scheme)) {
             return uri.getPath();
         }
         return null;
@@ -162,9 +171,12 @@ public class PathUtils {
                 int index = cursor.getColumnIndexOrThrow(column);
                 return cursor.getString(index);
             }
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
         } finally {
-            if (cursor != null)
+            if (cursor != null) {
                 cursor.close();
+            }
         }
         return null;
     }
@@ -199,5 +211,14 @@ public class PathUtils {
      */
     public static boolean isGooglePhotosUri(Uri uri) {
         return "com.google.android.apps.photos.content".equals(uri.getAuthority());
+    }
+
+    /**
+     * content://com.huawei.hidisk.fileprovider/root/storage/emulated/0/Android/data/com.xxx.xxx/
+     * @param uri
+     * @return
+     */
+    public static boolean isHuaWeiUri(Uri uri) {
+        return "com.huawei.hidisk.fileprovider".equals(uri.getAuthority());
     }
 }
