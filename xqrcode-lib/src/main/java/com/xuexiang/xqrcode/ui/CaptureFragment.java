@@ -71,8 +71,9 @@ public class CaptureFragment extends Fragment implements ICaptureView, SurfaceHo
     private boolean mPlayBeep;
     private static final float BEEP_VOLUME = 0.10f;
     private boolean mVibrate;
-    private SurfaceView mSurfaceView;
     private SurfaceHolder mSurfaceHolder;
+    @Nullable
+    private CameraInitCallBack mCameraInitCallBack;
     private QRCodeAnalyzeUtils.AnalyzeCallback mAnalyzeCallback;
     private Camera mCamera;
     private boolean mIsRepeated;
@@ -153,8 +154,8 @@ public class CaptureFragment extends Fragment implements ICaptureView, SurfaceHo
         }
 
         mViewfinderView = view.findViewById(R.id.viewfinder_view);
-        mSurfaceView = view.findViewById(R.id.preview_view);
-        mSurfaceHolder = mSurfaceView.getHolder();
+        SurfaceView surfaceView = view.findViewById(R.id.preview_view);
+        mSurfaceHolder = surfaceView.getHolder();
 
         return view;
     }
@@ -192,7 +193,16 @@ public class CaptureFragment extends Fragment implements ICaptureView, SurfaceHo
 
     @Override
     public void onDestroyView() {
-        mInactivityTimer.shutdown();
+        if (mInactivityTimer != null) {
+            mInactivityTimer.shutdown();
+        }
+        if (mMediaPlayer != null) {
+            mMediaPlayer.stop();
+            //关键语句
+            mMediaPlayer.reset();
+            mMediaPlayer.release();
+            mMediaPlayer = null;
+        }
         super.onDestroyView();
     }
 
@@ -231,14 +241,14 @@ public class CaptureFragment extends Fragment implements ICaptureView, SurfaceHo
             CameraManager.get().openDriver(surfaceHolder);
             mCamera = CameraManager.get().getCamera();
         } catch (Exception e) {
-            if (callBack != null) {
-                callBack.callBack(e);
+            if (mCameraInitCallBack != null) {
+                mCameraInitCallBack.callBack(e);
             }
             return;
         }
-        if (callBack != null) {
+        if (mCameraInitCallBack != null) {
             //打开成功
-            callBack.callBack(null);
+            mCameraInitCallBack.callBack(null);
         }
         if (mHandler == null) {
             mHandler = new CaptureViewHandler(this, mDecodeFormats, mCharacterSet, mViewfinderView);
@@ -291,7 +301,7 @@ public class CaptureFragment extends Fragment implements ICaptureView, SurfaceHo
             requireNonNull(getActivity()).setVolumeControlStream(AudioManager.STREAM_MUSIC);
             mMediaPlayer = new MediaPlayer();
             mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-            mMediaPlayer.setOnCompletionListener(beepListener);
+            mMediaPlayer.setOnCompletionListener(mBeepListener);
 
             AssetFileDescriptor file = getResources().openRawResourceFd(R.raw.beep);
             try {
@@ -323,7 +333,7 @@ public class CaptureFragment extends Fragment implements ICaptureView, SurfaceHo
     /**
      * When the beep has finished playing, rewind to queue up another one.
      */
-    private final MediaPlayer.OnCompletionListener beepListener = new MediaPlayer.OnCompletionListener() {
+    private final MediaPlayer.OnCompletionListener mBeepListener = new MediaPlayer.OnCompletionListener() {
         @Override
         public void onCompletion(MediaPlayer mediaPlayer) {
             mediaPlayer.seekTo(0);
@@ -339,14 +349,11 @@ public class CaptureFragment extends Fragment implements ICaptureView, SurfaceHo
         mAnalyzeCallback = analyzeCallback;
     }
 
-    @Nullable
-    CameraInitCallBack callBack;
-
     /**
      * Set callback for Camera check whether Camera init success or not.
      */
     public void setCameraInitCallBack(CameraInitCallBack callBack) {
-        this.callBack = callBack;
+        mCameraInitCallBack = callBack;
     }
 
     public interface CameraInitCallBack {
