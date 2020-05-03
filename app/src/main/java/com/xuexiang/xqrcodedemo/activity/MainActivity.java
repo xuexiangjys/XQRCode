@@ -27,9 +27,6 @@ public class MainActivity extends XPageActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //为了解决fragment里面放surfaceview，第一次黑屏的问题
-//        getWindow().setFormat(PixelFormat.TRANSLUCENT);
-
         CaptureFragment.onCreate(this);
 
         openPage(MainFragment.class);
