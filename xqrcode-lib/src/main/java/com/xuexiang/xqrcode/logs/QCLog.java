@@ -16,9 +16,10 @@
 
 package com.xuexiang.xqrcode.logs;
 
-import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Log;
+
+import androidx.annotation.NonNull;
 
 /**
  * 二维码日志记录

@@ -12,7 +12,7 @@ import com.google.zxing.LuminanceSource;
  */
 public class BitmapLuminanceSource extends LuminanceSource {
 
-    private byte bitmapPixels[];
+    private byte[] bitmapPixels;
 
     public BitmapLuminanceSource(Bitmap bitmap) {
         super(bitmap.getWidth(), bitmap.getHeight());

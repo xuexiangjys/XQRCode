@@ -20,7 +20,8 @@ import android.app.Activity;
 import android.graphics.Bitmap;
 import android.hardware.Camera;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+
+import androidx.fragment.app.Fragment;
 
 import com.google.zxing.Result;
 import com.xuexiang.xqrcode.camera.AutoFocusCallback;
@@ -218,10 +219,20 @@ public class XQRCode {
      * 解析二维码（接口回调返回结果）
      *
      * @param QRCodePicPath   二维码图片的路径
-     * @param analyzeCallback
+     * @param analyzeCallback 解析的回调
      */
     public static void analyzeQRCode(String QRCodePicPath, QRCodeAnalyzeUtils.AnalyzeCallback analyzeCallback) {
         QRCodeAnalyzeUtils.analyze(QRCodePicPath, analyzeCallback);
+    }
+
+    /**
+     * 解析二维码（接口回调返回结果）
+     *
+     * @param QRCodeBitmap    二维码图片
+     * @param analyzeCallback 解析的回调
+     */
+    public static void analyzeQRCode(Bitmap QRCodeBitmap, QRCodeAnalyzeUtils.AnalyzeCallback analyzeCallback) {
+        QRCodeAnalyzeUtils.analyze(QRCodeBitmap, analyzeCallback);
     }
 
     /**
@@ -234,12 +245,21 @@ public class XQRCode {
     }
 
     /**
+     * 解析二维码（简单返回结果）
+     *
+     * @param QRCodeBitmap 二维码图片
+     */
+    public static Result analyzeQRCode(Bitmap QRCodeBitmap) {
+        return QRCodeAnalyzeUtils.analyze(QRCodeBitmap);
+    }
+
+    /**
      * 获取解析二维码的结果
      *
      * @param QRCodePicPath 二维码图片的路径
      */
     public static Result getAnalyzeQRCodeResult(String QRCodePicPath) {
-        return QRCodeAnalyzeUtils.getAnalyzeQRCodeResult(QRCodePicPath);
+        return QRCodeAnalyzeUtils.analyzeQRCode(QRCodePicPath);
     }
 
     //================================二维码生成===================================//

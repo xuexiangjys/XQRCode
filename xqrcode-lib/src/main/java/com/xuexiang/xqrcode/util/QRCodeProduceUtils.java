@@ -470,7 +470,7 @@ public final class QRCodeProduceUtils {
     private static ByteMatrix getBitMatrix(String contents) {
         try {
             QRCode qrCode = getProtoQRCode(contents, ErrorCorrectionLevel.H);
-            int agnCenter[] = qrCode.getVersion().getAlignmentPatternCenters();
+            int[] agnCenter = qrCode.getVersion().getAlignmentPatternCenters();
             ByteMatrix byteMatrix = qrCode.getMatrix();
             int matSize = byteMatrix.getWidth();
             for (int row = 0; row < matSize; row++) {
@@ -525,7 +525,9 @@ public final class QRCodeProduceUtils {
     }
 
     private static boolean isTypeAGN(int x, int y, int[] agnCenter, boolean edgeOnly) {
-        if (agnCenter.length == 0) return false;
+        if (agnCenter.length == 0) {
+            return false;
+        }
         int edgeCenter = agnCenter[agnCenter.length - 1];
         for (int agnY : agnCenter) {
             for (int agnX : agnCenter) {

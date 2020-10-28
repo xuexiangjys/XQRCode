@@ -18,7 +18,8 @@ package com.xuexiang.xqrcode.util;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.support.annotation.Nullable;
+
+import androidx.annotation.Nullable;
 
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.BinaryBitmap;
@@ -72,12 +73,31 @@ public final class QRCodeAnalyzeUtils {
     }
 
     /**
+     * 解析二维码（接口回调返回结果）
+     *
+     * @param QRCodeBitmap    二维码图片
+     * @param analyzeCallback 解析的回调
+     */
+    public static void analyze(Bitmap QRCodeBitmap, AnalyzeCallback analyzeCallback) {
+        Result rawResult = analyze(QRCodeBitmap);
+        if (rawResult != null) {
+            if (analyzeCallback != null) {
+                analyzeCallback.onAnalyzeSuccess(QRCodeBitmap, rawResult.getText());
+            }
+        } else {
+            if (analyzeCallback != null) {
+                analyzeCallback.onAnalyzeFailed();
+            }
+        }
+    }
+
+    /**
      * 解析二维码（简单返回结果，扫描失败返回空）
      *
      * @param qrCodePicPath 二维码图片的路径
      */
     public static String analyze(String qrCodePicPath) {
-        Result rawResult = getAnalyzeQRCodeResult(qrCodePicPath);
+        Result rawResult = analyzeQRCode(qrCodePicPath);
         if (rawResult != null) {
             return rawResult.getText();
         } else {
@@ -90,12 +110,13 @@ public final class QRCodeAnalyzeUtils {
      *
      * @param qrCodePicPath 二维码图片的路径
      */
-    public static Result getAnalyzeQRCodeResult(String qrCodePicPath) {
+    public static Result analyzeQRCode(String qrCodePicPath) {
         Bitmap bitmap = getQRCodeBitmap(qrCodePicPath);
         return analyze(bitmap);
     }
 
     //==================================//
+
     /**
      * 获取二维码图片
      *

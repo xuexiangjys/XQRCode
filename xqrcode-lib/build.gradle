@@ -17,7 +17,7 @@ android {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    compileOnly deps.support.app_compat
+    compileOnly deps.androidx.appcompat
     implementation 'com.google.zxing:core:3.3.3'
 }
 
