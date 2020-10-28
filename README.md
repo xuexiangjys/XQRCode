@@ -20,13 +20,14 @@
 * 支持二维码解析功能
 
 ## 1、演示（请star支持）
-![](./img/xqrcode.gif)
+
+![xqrcode.gif](https://img.rruu.net/image/5f99665a5fc0f)
 
 ### Demo下载
 
 [![downloads](https://img.shields.io/badge/downloads-1.7M-blue.svg)](https://github.com/xuexiangjys/XQRCode/blob/master/apk/xqrcodedemo.apk?raw=true)
 
-![](./img/download.png)
+![xqrcode_download.png](https://img.rruu.net/image/5f996791e9f30)
 
 
 ## 2、如何使用
@@ -49,6 +50,9 @@ allprojects {
 ```
 dependencies {
   ...
+   // 如果是androidx项目，使用1.1.0版本及以上
+  implementation 'com.github.xuexiangjys:XQRCode:1.1.0'
+   // 如果是support项目，请使用1.0.5版本
   implementation 'com.github.xuexiangjys:XQRCode:1.0.6'
 }
 ```
