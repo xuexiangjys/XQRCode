@@ -44,11 +44,11 @@ dependencies {
 
 https://github.com/yipianfengye/android-zxingLibrary
 
-## 联系方式
+## 公众号
 
-[![](https://img.shields.io/badge/点击一键加入QQ交流群-602082750-blue.svg)](http://shang.qq.com/wpa/qunwpa?idkey=9922861ef85c19f1575aecea0e8680f60d9386080a97ed310c971ae074998887)
+> 更多资讯内容，欢迎扫描关注我的个人微信公众号:【我的Android开源之旅】
 
-![gzh_weixin.jpg](https://img.rruu.net/image/5f871cfff3194)
+![](https://ss.im5i.com/2021/06/14/65yoL.jpg)
 
 [apisvg]: https://img.shields.io/badge/API-14+-brightgreen.svg
 [api]: https://android-arsenal.com/api?level=14

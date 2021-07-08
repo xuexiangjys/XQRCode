@@ -21,14 +21,13 @@
 
 ## 1、演示（请star支持）
 
-![xqrcode.gif](https://img.rruu.net/image/5f99665a5fc0f)
+![xqrcode.gif](https://ss.im5i.com/2021/07/09/gSwU2.gif)
 
 ### Demo下载
 
 [![downloads](https://img.shields.io/badge/downloads-1.7M-blue.svg)](https://github.com/xuexiangjys/XQRCode/blob/master/apk/xqrcodedemo.apk?raw=true)
 
-![xqrcode_download.png](https://img.rruu.net/image/5f996791e9f30)
-
+![xqrcode_download.png](https://ss.im5i.com/2021/07/09/gShv7.png)
 
 ## 2、如何使用
 目前支持主流开发工具AndroidStudio的使用，直接配置build.gradle，增加依赖即可.
@@ -305,13 +304,13 @@ https://github.com/yipianfengye/android-zxingLibrary
 
 > 你的打赏是我维护的动力，我将会列出所有打赏人员的清单在下方作为凭证，打赏前请留下打赏项目的备注！
 
-![pay.png](https://img.rruu.net/image/5f871d00045da)
+![pay.png](https://ss.im5i.com/2021/06/14/6twG6.png)
 
-## 联系方式
+## 公众号
 
-[![](https://img.shields.io/badge/点击一键加入QQ交流群-602082750-blue.svg)](http://shang.qq.com/wpa/qunwpa?idkey=9922861ef85c19f1575aecea0e8680f60d9386080a97ed310c971ae074998887)
+> 更多资讯内容，欢迎扫描关注我的个人微信公众号:【我的Android开源之旅】
 
-![gzh_weixin.jpg](https://img.rruu.net/image/5f871cfff3194)
+![](https://ss.im5i.com/2021/06/14/65yoL.jpg)
 
 [apisvg]: https://img.shields.io/badge/API-14+-brightgreen.svg
 [api]: https://android-arsenal.com/api?level=14
