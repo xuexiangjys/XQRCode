@@ -4,14 +4,11 @@ apply plugin: 'com.xuexiang.xaop' //引用xaop插件
 apply plugin: 'android-aspectjx'
 
 apply from: "../gradle/exported.gradle"
+apply from: "$rootDir/gradle/base.gradle"
 
 android {
-    compileSdk build_versions.target_sdk
-
     defaultConfig {
         applicationId "com.xuexiang.xqrcodedemo"
-        minSdk 14
-        targetSdk build_versions.target_sdk
         versionCode 1
         versionName "1.0"
 
@@ -48,15 +45,11 @@ android {
     if (isNeedPackage.toBoolean()) {
         applicationVariants.all { variant ->
             variant.outputs.all {
-                if (variant.buildType.name.equals('release')) {
+                if (variant.buildType.name == 'release') {
                     outputFileName = "xqrcodedemo.apk"
                 }
             }
         }
-    }
-
-    lintOptions {
-        abortOnError false
     }
 
     compileOptions {
@@ -66,8 +59,6 @@ android {
 }
 
 dependencies {
-    implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation deps.androidx.appcompat
     implementation project(':xqrcode-lib')
 
 //    implementation 'com.github.xuexiangjys:XQRCode:1.1.0'
