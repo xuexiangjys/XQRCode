@@ -1,21 +1,23 @@
 apply plugin: 'com.android.application'
 apply plugin: 'com.xuexiang.xaop' //引用xaop插件
 //apply plugin: 'img-optimizer'
+apply plugin: 'android-aspectjx'
+
+apply from: "../gradle/exported.gradle"
 
 android {
-    compileSdkVersion build_versions.target_sdk
-    buildToolsVersion build_versions.build_tools
+    compileSdk build_versions.target_sdk
 
     defaultConfig {
         applicationId "com.xuexiang.xqrcodedemo"
-        minSdkVersion 14
-        targetSdkVersion build_versions.target_sdk
+        minSdk 14
+        targetSdk build_versions.target_sdk
         versionCode 1
         versionName "1.0"
 
         javaCompileOptions {
             annotationProcessorOptions {
-                arguments = [ moduleName : project.getName() ]
+                arguments = [moduleName: project.getName()]
             }
         }
 
@@ -66,9 +68,9 @@ android {
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation deps.androidx.appcompat
-//    implementation project(':xqrcode-lib')
+    implementation project(':xqrcode-lib')
 
-    implementation 'com.github.xuexiangjys:XQRCode:1.1.0'
+//    implementation 'com.github.xuexiangjys:XQRCode:1.1.0'
 
     implementation 'com.github.xuexiangjys.XUtil:xutil-core:2.0.0'
     implementation 'com.github.xuexiangjys.XAOP:xaop-runtime:1.1.0'  //添加依赖
@@ -81,5 +83,9 @@ dependencies {
     annotationProcessor deps.butterknife.compiler
 
     //如果开启了内存泄漏监测leak,就需要加上这个依赖
-    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.6'
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.9.1'
+}
+
+aspectjx {
+    include 'com.xuexiang.xqrcodedemo'
 }

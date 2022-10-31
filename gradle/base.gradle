@@ -1,0 +1,20 @@
+android {
+    compileSdk build_versions.target_sdk
+
+    defaultConfig {
+        minSdk 14
+        targetSdk build_versions.target_sdk
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+    buildFeatures.buildConfig = false
+    lintOptions {
+        abortOnError false
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: "libs", include: ["*.jar", "*.aar"])
+
+    compileOnly deps.androidx.appcompat
+
+}

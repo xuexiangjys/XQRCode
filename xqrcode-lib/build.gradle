@@ -1,27 +1,8 @@
-apply plugin: 'com.android.library'
-//apply plugin: 'img-optimizer'
+apply from: "$rootDir/gradle/lib.gradle"
 
-android {
-    compileSdkVersion build_versions.target_sdk
-    buildToolsVersion build_versions.build_tools
-
-    defaultConfig {
-        minSdkVersion 14
-        targetSdkVersion build_versions.target_sdk
-
-        consumerProguardFiles "proguard-rules.pro"
-    }
-
-    lintOptions {
-        abortOnError false
-    }
-}
+apply from: "$rootDir/gradle/publish.gradle"
 
 dependencies {
-    implementation fileTree(include: ['*.jar'], dir: 'libs')
-    compileOnly deps.androidx.appcompat
     implementation 'com.google.zxing:core:3.3.3'
 }
-
-apply from: "../JitPackUpload.gradle"
 
