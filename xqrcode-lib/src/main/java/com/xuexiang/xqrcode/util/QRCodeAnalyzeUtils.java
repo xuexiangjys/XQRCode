@@ -138,17 +138,13 @@ public final class QRCodeAnalyzeUtils {
         MultiFormatReader multiFormatReader = new MultiFormatReader();
 
         // 解码的参数
-        Hashtable<DecodeHintType, Object> hints = new Hashtable<DecodeHintType, Object>(2);
+        Hashtable<DecodeHintType, Object> hints = new Hashtable<>(2);
         // 可以解析的编码类型
-        Vector<BarcodeFormat> decodeFormats = new Vector<BarcodeFormat>();
-        if (decodeFormats.isEmpty()) {
-            decodeFormats = new Vector<>();
-
-            // 这里设置可扫描的类型，我这里选择了都支持
-            decodeFormats.addAll(DecodeFormatManager.ONE_D_FORMATS);
-            decodeFormats.addAll(DecodeFormatManager.QR_CODE_FORMATS);
-            decodeFormats.addAll(DecodeFormatManager.DATA_MATRIX_FORMATS);
-        }
+        Vector<BarcodeFormat> decodeFormats = new Vector<>();
+        // 这里设置可扫描的类型，我这里选择了都支持
+        decodeFormats.addAll(DecodeFormatManager.ONE_D_FORMATS);
+        decodeFormats.addAll(DecodeFormatManager.QR_CODE_FORMATS);
+        decodeFormats.addAll(DecodeFormatManager.DATA_MATRIX_FORMATS);
         hints.put(DecodeHintType.POSSIBLE_FORMATS, decodeFormats);
         // 设置继续的字符编码格式为UTF8
         // hints.put(DecodeHintType.CHARACTER_SET, "UTF8");

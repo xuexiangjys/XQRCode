@@ -34,7 +34,7 @@ allprojects {
 dependencies {
   ...
    // 如果是androidx项目，使用1.1.0版本及以上
-  implementation 'com.github.xuexiangjys:XQRCode:1.1.0'
+  implementation 'com.github.xuexiangjys:XQRCode:1.1.1'
    // 如果是support项目，请使用1.0.6版本
   implementation 'com.github.xuexiangjys:XQRCode:1.0.6'
 }
